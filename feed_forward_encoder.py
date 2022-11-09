@@ -14,17 +14,17 @@ class FeedForwardEncoder:
                 polynomials are represented by a list of coefficients. For example, the
                 transfer function matrix [1 | 1 + x + x^3] is represented by the list
                 [[1, 0, 0, 0], [1, 1, 0, 1]]. The number of coefficients in each list
-                must be the same, i.e., leading zero coefficients must be provided.
+                must be the same, i.e., leading zero coefficients must be provided. At
+                least one of the polynomial representations must have maximum degree,
+                i.e., at least one of the lists must end in a 1.
         """
         self._transfer_matrix = transfer_matrix
         self._transfer_matrix_degree = len(transfer_matrix[0]) - 1
         self._padding = np.array([0] * self._transfer_matrix_degree)
         assert all(
-            map(
-                lambda x: len(x) == (self._transfer_matrix_degree + 1),
-                self._transfer_matrix,
-            )
+            len(poly) == len(self._transfer_matrix[0]) for poly in self._transfer_matrix
         )
+        assert any(poly[-1] != 0 for poly in self._transfer_matrix)
 
     def encode(self, data: np.ndarray) -> np.ndarray:
         """Encodes an array of bits using the feedforward convolutional encoder.
