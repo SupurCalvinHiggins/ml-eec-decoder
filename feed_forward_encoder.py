@@ -30,7 +30,12 @@ class FeedForwardEncoder:
         """Encodes an array of bits using the feedforward convolutional encoder.
         Additional zero bits equivalent to the maximum degree of the entries of
         transfer function matrix will be appended to the data prior to encoding to
-        ensure proper termination of the encoder.
+        ensure proper termination of the encoder. The output will be interleaved. For
+        example, with transfer function matrix [1, 1 + x] and input data [1, 1, 0],
+        the bits to encode are [1, 1, 0, 0]. The first polynomial will fill the
+        following output bits after multiplication: [1, _, 1, _, 0, _, 0, _]. The output
+        will be completed after multiplication with the second polynomial:
+        [1, 1, 1, 0, 0, 1, 0, 0].
 
         Args:
             data: Array of bits to encode with the feedforward convolutional encoder.
