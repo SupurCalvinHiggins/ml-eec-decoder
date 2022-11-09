@@ -1,10 +1,4 @@
-from cc import CC, FeedForwardEncoder
-
-
-def test_cc_encode() -> None:
-    data = [1, 1, 0, 0, 1, 0, 1]
-    result = CC().encode(data)
-    assert result == [1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 1]
+from cc import FeedForwardEncoder
 
 
 def test_feedforward_encoder_1() -> None:
