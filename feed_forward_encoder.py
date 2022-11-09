@@ -1,23 +1,25 @@
-from collections import deque
+import numpy as np
 
 
 class FeedForwardEncoder:
     def __init__(self, generator):
         self._generator = generator
-        self._registers = deque([0] * (max(map(len, generator)) - 1))
-        self._padding = [0] * (max(map(len, generator)) - 1)
+        self._generator_degree = len(generator[0])
+        self._padding = np.array([0] * (self._generator_degree - 1))
+        assert all(map(lambda x: len(x) == self._generator_degree, self._generator))
 
     def encode(self, data):
-        padded_data = data + self._padding
-        output_data = []
-        for bit in padded_data:
-            for polynomial in self._generator:
-                output_bit = bit
-                for poly_bit, reg_bit in zip(polynomial[1:], self._registers):
-                    if poly_bit:
-                        output_bit ^= reg_bit
-                output_data.append(output_bit)
-            if self._registers:
-                self._registers.rotate(1)
-                self._registers[0] = bit
+        input_data = np.append(data, self._padding)
+        output_data = np.zeros(input_data.size * len(self._generator))
+
+        for poly_bits in zip(*self._generator):
+            for i, poly_bit in enumerate(poly_bits):
+                if poly_bit:
+                    output_data[i :: len(self._generator)] = np.logical_xor(
+                        output_data[i :: len(self._generator)],
+                        input_data,
+                    )
+            input_data = np.roll(input_data, 1)
+            input_data[0] = 0
+
         return output_data
