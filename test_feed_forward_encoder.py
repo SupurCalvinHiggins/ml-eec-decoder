@@ -1,4 +1,4 @@
-from cc import FeedForwardEncoder
+from feed_forward_encoder import FeedForwardEncoder
 
 
 def test_feedforward_encoder_1() -> None:
