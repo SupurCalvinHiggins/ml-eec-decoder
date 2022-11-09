@@ -9,7 +9,7 @@ BENCHMARK_SIZE = 10_000_000
 def make_benchmark(transfer_matrix):
     def benchmark() -> int:
         np.random.seed(0)
-        data = list(np.random.choice([0, 1], size=BENCHMARK_SIZE))
+        data = np.random.choice([0, 1], size=BENCHMARK_SIZE)
         encoder = FeedForwardEncoder(transfer_matrix=transfer_matrix)
         start_time = time.time()
         _ = encoder.encode(data)

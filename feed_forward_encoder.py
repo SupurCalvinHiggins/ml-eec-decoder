@@ -4,7 +4,9 @@ import numpy as np
 class FeedForwardEncoder:
     def __init__(self, transfer_matrix: list[list[int]]) -> None:
         """Construct a feedforward (FIR) convolutional encoder from a given transfer
-        function matrix with polynomial entries in F[[x]]^2.
+        function matrix with polynomial entries in F[[x]]^2. See Chapter 12 of
+        Todd Moon's Error Correction Coding: Mathematical Methods and Algorithms for
+        additional details.
 
         Args:
             transfer_matrix:
@@ -21,7 +23,8 @@ class FeedForwardEncoder:
             map(lambda x: len(x) == self._transfer_matrix_degree, self._transfer_matrix)
         )
 
-    def encode(self, data):
+    def encode(self, data: np.ndarray) -> np.ndarray:
+        """ """
         input_data = np.append(data, self._padding)
         output_data = np.zeros(input_data.size * len(self._transfer_matrix))
 
