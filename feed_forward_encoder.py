@@ -4,13 +4,13 @@ import numpy as np
 class FeedForwardEncoder:
     def __init__(self, transfer_matrix: list[list[int]]) -> None:
         """Constructs a feedforward (FIR) convolutional encoder from a given transfer
-        function matrix with polynomial entries in F[[x]]^2. See Chapter 12 of
+        function matrix with polynomial entries in F[[x]]. See Chapter 12 of
         Todd Moon's Error Correction Coding: Mathematical Methods and Algorithms for
         additional details.
 
         Args:
             transfer_matrix:
-                A transfer function matrix with polynomial entries in F[[x]]^2. The
+                A transfer function matrix with polynomial entries in F[[x]]. The
                 polynomials are represented by a list of coefficients. For example, the
                 transfer function matrix [1 | 1 + x + x^3] is represented by the list
                 [[1, 0, 0, 0], [1, 1, 0, 1]]. The number of coefficients in each list
