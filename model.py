@@ -1,6 +1,6 @@
 import numpy as np
 import tensorflow as tf
-from keras.models import Sequential
+from keras.models import Sequential, load_model
 from keras.layers import (
     LSTM,
     Dense,
@@ -11,19 +11,32 @@ from keras.layers import (
     Bidirectional,
 )
 from feed_forward_encoder import FeedForwardEncoder
+from binary_symmetric_channel import BinarySymmetricChannel
 
 
 # model.add(Conv1D(filters=10, kernel_size=2, activation="relu"))
 
+# prob_single_valid = 0.95**2
+# prob_single_invalid = 1 - prob_single_valid
+# expected_invalid = 0
+# for num_invalid in range(0, 65):
+#     prob = prob_single_invalid ** (num_invalid)
+#     expected_invalid += prob * num_invalid
+# print(expected_invalid)
+# exit()
+
 
 class EncoderSequence(tf.keras.utils.Sequence):
-    def __init__(self, encoder, batches, x_shape, y_size, padding_size, batch_size=32):
+    def __init__(
+        self, encoder, batches, x_shape, y_size, padding_size, channel, batch_size=32
+    ):
         self._encoder = encoder
         self._batches = batches
         self._batch_size = batch_size
         self._x_shape = x_shape
         self._y_size = y_size
         self._padding_size = padding_size
+        self._channel = channel
         self._generate_data()
 
     def _generate_data(self):
@@ -35,8 +48,8 @@ class EncoderSequence(tf.keras.utils.Sequence):
         self._x = np.zeros((self._batches, self._batch_size, *self._x_shape))
         for i in range(self._batches):
             for j in range(self._batch_size):
-                self._x[i, j, :, :] = self._encoder.encode(
-                    self._y[i, j, : self._y_size]
+                self._x[i, j, :, :] = self._channel.transform(
+                    self._encoder.encode(self._y[i, j, : self._y_size])
                 ).reshape(*self._x_shape)
 
     def __len__(self):
@@ -50,23 +63,26 @@ class EncoderSequence(tf.keras.utils.Sequence):
 
 model = Sequential()
 model.add(Input(shape=(None, 2)))
-model.add(Bidirectional(LSTM(units=32, return_sequences=True)))
+model.add(Bidirectional(LSTM(units=64, return_sequences=True)))
 model.add(TimeDistributed(Dense(units=1, activation="sigmoid")))
 model.compile(loss="mse", optimizer="adam")
 model.summary()
 
 encoder = FeedForwardEncoder([[1, 1, 0], [1, 0, 1]])
-model.fit(
-    EncoderSequence(
-        encoder=encoder,
-        batches=1024,
-        x_shape=(64, 2),
-        y_size=62,
-        padding_size=2,
-        batch_size=32,
-    ),
-    epochs=5,
-)
+# model.fit(
+#     EncoderSequence(
+#         encoder=encoder,
+#         batches=1024,
+#         x_shape=(64, 2),
+#         y_size=62,
+#         padding_size=2,
+#         batch_size=32,
+#         channel=BinarySymmetricChannel(crossover_probability=0.01),
+#     ),
+#     epochs=10,
+# )
+# model.save("model.h5")
+model = load_model("model.h5")
 
 test_encoder = EncoderSequence(
     encoder=encoder,
@@ -75,15 +91,20 @@ test_encoder = EncoderSequence(
     y_size=126,
     padding_size=2,
     batch_size=1,
+    channel=BinarySymmetricChannel(crossover_probability=0),
 )
-x_test, y_test = test_encoder[0]
-pred_prob = model.predict(x_test)[0].reshape(128)
-pred = np.array(np.around(pred_prob), dtype=np.uint8)
-y_test = y_test.reshape(128)
-print(pred_prob)
-print(pred)
-print(y_test)
-print(np.bitwise_xor(y_test, pred).sum() / y_test.size)
+
+for i in range(64):
+    x_test, y_test = test_encoder[0]
+    x_test = np.array(x_test, dtype=np.uint8)
+    x_test[:, i, :] ^= 1
+    pred_prob = model.predict(x_test)[0].reshape(128)
+    pred = np.array(np.around(pred_prob), dtype=np.uint8)
+    y_test = y_test.reshape(128)
+    # print(pred_prob)
+    # print(pred)
+    # print(y_test)
+    print(np.bitwise_xor(y_test, pred).sum() / y_test.size)
 
 
 # model.fit(x=x.reshape(1, 128, 1), y=y.reshape(1, 62, 1))
