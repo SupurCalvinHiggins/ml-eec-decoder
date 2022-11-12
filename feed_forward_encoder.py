@@ -26,7 +26,7 @@ class FeedForwardEncoder:
         )
         assert any(poly[-1] != 0 for poly in self._transfer_matrix)
 
-    def encode(self, data: np.ndarray) -> np.ndarray:
+    def transform(self, data: np.ndarray) -> np.ndarray:
         """Encodes an array of bits using the feedforward convolutional encoder.
         Additional zero bits equivalent to the maximum degree of the entries of
         transfer function matrix will be appended to the data prior to encoding to
