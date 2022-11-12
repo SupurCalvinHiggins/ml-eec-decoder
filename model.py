@@ -15,38 +15,75 @@ from feed_forward_encoder import FeedForwardEncoder
 
 # model.add(Conv1D(filters=10, kernel_size=2, activation="relu"))
 
+
+class EncoderSequence(tf.keras.utils.Sequence):
+    def __init__(self, encoder, batches, x_shape, y_size, padding_size, batch_size=32):
+        self._encoder = encoder
+        self._batches = batches
+        self._batch_size = batch_size
+        self._x_shape = x_shape
+        self._y_size = y_size
+        self._padding_size = padding_size
+        self._generate_data()
+
+    def _generate_data(self):
+        self._y = np.random.choice(
+            [0, 1],
+            (self._batches, self._batch_size, self._y_size + self._padding_size, 1),
+        )
+        self._y[:, :, self._y_size :] = 0
+        self._x = np.zeros((self._batches, self._batch_size, *self._x_shape))
+        for i in range(self._batches):
+            for j in range(self._batch_size):
+                self._x[i, j, :, :] = self._encoder.encode(
+                    self._y[i, j, : self._y_size]
+                ).reshape(*self._x_shape)
+
+    def __len__(self):
+        return self._batches
+
+    def __getitem__(self, idx):
+        batch_x = self._x[idx, :, :, :]
+        batch_y = self._y[idx, :, :, :]
+        return batch_x, batch_y
+
+
 model = Sequential()
-model.add(Input(shape=(64, 2)))
-model.add(Bidirectional(LSTM(units=8, return_sequences=True)))
+model.add(Input(shape=(None, 2)))
+model.add(Bidirectional(LSTM(units=32, return_sequences=True)))
 model.add(TimeDistributed(Dense(units=1, activation="sigmoid")))
 model.compile(loss="mse", optimizer="adam")
 model.summary()
 
-# pred = model.predict(np.random.choice([0, 1], size=128).reshape(1, 64, 2))
-# print(pred.shape)
-# pred = model.predict(np.random.choice([0, 1], size=256).reshape(1, 256, 1))
-# print(pred.shape)
-# exit()
-
-encoder = FeedForwardEncoder([[1, 0, 0], [1, 0, 1]])
-Y = np.random.choice([0, 1], size=(1000, 64, 1))
-Y[:, 62:, :] = 0
-X = np.array(
-    [encoder.encode(Y[i, :62, :].reshape(62)).reshape(64, 2) for i in range(1000)]
+encoder = FeedForwardEncoder([[1, 1, 0], [1, 0, 1]])
+model.fit(
+    EncoderSequence(
+        encoder=encoder,
+        batches=1024,
+        x_shape=(64, 2),
+        y_size=62,
+        padding_size=2,
+        batch_size=32,
+    ),
+    epochs=5,
 )
 
-model.fit(X, Y, epochs=20)
-
-
-y_test = np.random.choice([0, 1], size=64)
-y_test[62:] = 0
-x_test = encoder.encode(y_test[:62].reshape(62))
-pred_prob = model.predict(x_test.reshape(1, 64, 2))[0].reshape(64)
-pred = np.around(pred_prob)
+test_encoder = EncoderSequence(
+    encoder=encoder,
+    batches=1,
+    x_shape=(128, 2),
+    y_size=126,
+    padding_size=2,
+    batch_size=1,
+)
+x_test, y_test = test_encoder[0]
+pred_prob = model.predict(x_test)[0].reshape(128)
+pred = np.array(np.around(pred_prob), dtype=np.uint8)
+y_test = y_test.reshape(128)
 print(pred_prob)
 print(pred)
 print(y_test)
-print(np.logical_xor(y_test, pred))
+print(np.bitwise_xor(y_test, pred).sum() / y_test.size)
 
 
 # model.fit(x=x.reshape(1, 128, 1), y=y.reshape(1, 62, 1))
@@ -63,35 +100,35 @@ print(np.logical_xor(y_test, pred))
 #
 
 
-class CCSequence(tf.keras.utils.Sequence):
-    def __init__(self, cc, batches, batch_size):
-        self.cc = cc
-        self.batches = batches
-        self.batch_size = batch_size
-        self.generate_xy()
+# class CCSequence(tf.keras.utils.Sequence):
+#     def __init__(self, cc, batches, batch_size):
+#         self.cc = cc
+#         self.batches = batches
+#         self.batch_size = batch_size
+#         self.generate_xy()
 
-    def generate_xy(self):
-        size = self.batches * self.batch_size * 62
-        self.y = np.random.choice([0, 1], size=size)
-        self.x = np.array(
-            [self.cc.encode(self.y[idx : idx + 62]) for idx in range(0, size, 62)]
-        )
-        # print("self.x.shape", self.x.shape)
-        # print("self.y.shape", self.y.shape)
+#     def generate_xy(self):
+#         size = self.batches * self.batch_size * 62
+#         self.y = np.random.choice([0, 1], size=size)
+#         self.x = np.array(
+#             [self.cc.encode(self.y[idx : idx + 62]) for idx in range(0, size, 62)]
+#         )
+#         # print("self.x.shape", self.x.shape)
+#         # print("self.y.shape", self.y.shape)
 
-    def __len__(self):
-        return self.batches * self.batch_size
+#     def __len__(self):
+#         return self.batches * self.batch_size
 
-    def __getitem__(self, idx):
-        # print("idx", idx)
-        batch_x = self.x[idx].reshape(1, 128)
-        batch_y = self.y[idx * 62 : (idx + 1) * 62].reshape(1, 62)
-        # print("batch_x.shape", batch_x.shape)
-        # print("batch_y.shape", batch_y.shape)
-        # OBSERVATIONS MIGHT BE IN THE ROWS
-        assert np.array_equal(self.cc.encode(batch_y), batch_x.flatten())
-        batch_y_padded = np.append(batch_y, [0, 0])
-        batch_x_shaped = batch_x.reshape(1, 64, 2)
-        # print("batch_x_shaped.shape", batch_x_shaped.shape)
-        # print("batch_y_padded.shape", batch_y_padded.shape)
-        return batch_x_shaped, batch_y_padded
+#     def __getitem__(self, idx):
+#         # print("idx", idx)
+#         batch_x = self.x[idx].reshape(1, 128)
+#         batch_y = self.y[idx * 62 : (idx + 1) * 62].reshape(1, 62)
+#         # print("batch_x.shape", batch_x.shape)
+#         # print("batch_y.shape", batch_y.shape)
+#         # OBSERVATIONS MIGHT BE IN THE ROWS
+#         assert np.array_equal(self.cc.encode(batch_y), batch_x.flatten())
+#         batch_y_padded = np.append(batch_y, [0, 0])
+#         batch_x_shaped = batch_x.reshape(1, 64, 2)
+#         # print("batch_x_shaped.shape", batch_x_shaped.shape)
+#         # print("batch_y_padded.shape", batch_y_padded.shape)
+#         return batch_x_shaped, batch_y_padded
