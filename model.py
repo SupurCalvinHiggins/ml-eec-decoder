@@ -30,6 +30,7 @@ model.summary()
 
 encoder = FeedForwardEncoder([[1, 0, 0], [1, 0, 1]])
 Y = np.random.choice([0, 1], size=(1000, 64, 1))
+Y[:, 62:, :] = 0
 X = np.array(
     [encoder.encode(Y[i, :62, :].reshape(62)).reshape(64, 2) for i in range(1000)]
 )
@@ -38,10 +39,14 @@ model.fit(X, Y, epochs=20)
 
 
 y_test = np.random.choice([0, 1], size=64)
+y_test[62:] = 0
 x_test = encoder.encode(y_test[:62].reshape(62))
-pred = model.predict(x_test.reshape(1, 64, 2))
-print(pred[0].reshape(64))
+pred_prob = model.predict(x_test.reshape(1, 64, 2))[0].reshape(64)
+pred = np.around(pred_prob)
+print(pred_prob)
+print(pred)
 print(y_test)
+print(np.logical_xor(y_test, pred))
 
 
 # model.fit(x=x.reshape(1, 128, 1), y=y.reshape(1, 62, 1))
