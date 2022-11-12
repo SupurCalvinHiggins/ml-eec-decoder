@@ -1,33 +1,24 @@
 import numpy as np
 import tensorflow as tf
 from keras.models import Sequential
-from keras.layers import LSTM, Dense, TimeDistributed, RepeatVector, Input
+from keras.layers import LSTM, Dense, TimeDistributed, Input, Conv1D, AveragePooling1D
 from feed_forward_encoder import FeedForwardEncoder
 
 
+# model.add(Conv1D(filters=10, kernel_size=2, activation="relu"))
+
 model = Sequential()
-model.add(LSTM(units=4, input_shape=(128, 1), return_sequences=True))
-# model.add(RepeatVector(64))
-model.add(LSTM(units=4, input_shape=(64, 1), return_sequences=True))
-model.add(TimeDistributed(Dense(2, activation="softmax")))
+model.add(LSTM(units=100, input_shape=(None, 1), return_sequences=True))
+model.add(AveragePooling1D())
+model.add(TimeDistributed(Dense(units=1)))
 model.compile(loss="binary_crossentropy", optimizer="adam")
 model.summary()
 
 pred = model.predict(np.random.choice([0, 1], size=128).reshape(1, 128, 1))
 print(pred.shape)
-# lstm = LSTM(units=4, input_shape=(128, 1), return_sequences=False)
-# repeat = RepeatVector(4)(np.array([0, 1, 2]).reshape(1, 3))
-# print(repeat)
+pred = model.predict(np.random.choice([0, 1], size=256).reshape(1, 256, 1))
+print(pred.shape)
 exit()
-
-# model = Sequential()
-# model.add(Input(shape=128))
-# model.add(Dense(128))
-# model.add(Dense(128))
-# model.add(Dense(62, activation="sigmoid"))
-# model.compile(loss="mean_squared_error")
-# pred = model.predict(np.random.choice([0, 1], size=128).reshape(1, 128, 1))
-# print(pred.shape)
 
 
 class CCSequence(tf.keras.utils.Sequence):
@@ -76,9 +67,9 @@ print(y)
 # https://datascience.stackexchange.com/questions/26366/training-an-rnn-with-examples-of-different-lengths-in-keras
 
 # https://wandb.ai/ayush-thakur/dl-question-bank/reports/LSTM-RNN-in-Keras-Examples-of-One-to-Many-Many-to-One-Many-to-Many---VmlldzoyMDIzOTM
-#
-#
-#
-#
+# https://goodboychan.github.io/python/deep_learning/tensorflow-keras/2020/12/09/01-RNN-Many-to-many.html
+# https://stackabuse.com/solving-sequence-problems-with-lstm-in-keras-part-2/
+# https://stackabuse.com/solving-sequence-problems-with-lstm-in-keras/
+# https://wandb.ai/ayush-thakur/dl-question-bank/reports/LSTM-RNN-in-Keras-Examples-of-One-to-Many-Many-to-One-Many-to-Many---VmlldzoyMDIzOTM
 #
 #
