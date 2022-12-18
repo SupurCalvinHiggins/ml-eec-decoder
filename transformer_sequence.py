@@ -7,7 +7,7 @@ class TransformerSequence(tf.keras.utils.Sequence):
     def __init__(
         self,
         transformer: TransformerPipeline,
-        batch_shape: tuple[int, int, int],
+        batch_shape: tuple[int, int, int, int],
         pad_count: int,
     ) -> None:
         """Constructs a Sequence dataset yielding batches of data in the shape of
@@ -40,6 +40,7 @@ class TransformerSequence(tf.keras.utils.Sequence):
         self._pad_count = pad_count
         self._X = None
         self._y = None
+        self.on_epoch_end()
 
     def __len__(self) -> int:
         """Length of the sequence.
@@ -81,7 +82,7 @@ class TransformerSequence(tf.keras.utils.Sequence):
         # Generate the features.
         for i in range(self._batch_count):
             for j in range(self._batch_size):
-                y_sample = self._y[i, j, self._symbol_count - self._pad_count :]
+                y_sample = self._y[i, j, : self._symbol_count - self._pad_count]
                 X_sample_shape = (self._symbol_count, self._symbol_size)
                 X_sample = self._transformer.transform(y_sample).reshape(X_sample_shape)
                 self._X[i, j, :, :] = X_sample

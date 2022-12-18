@@ -26,43 +26,11 @@ from binary_symmetric_channel import BinarySymmetricChannel
 # exit()
 
 
-class EncoderSequence(tf.keras.utils.Sequence):
-    def __init__(
-        self, encoder, batches, x_shape, y_size, padding_size, channel, batch_size=32
-    ):
-        self._encoder = encoder
-        self._batches = batches
-        self._batch_size = batch_size
-        self._x_shape = x_shape
-        self._y_size = y_size
-        self._padding_size = padding_size
-        self._channel = channel
-        self._generate_data()
-
-    def _generate_data(self):
-        self._y = np.random.choice(
-            [0, 1],
-            (self._batches, self._batch_size, self._y_size + self._padding_size, 1),
-        )
-        self._y[:, :, self._y_size :] = 0
-        self._x = np.zeros((self._batches, self._batch_size, *self._x_shape))
-        for i in range(self._batches):
-            for j in range(self._batch_size):
-                self._x[i, j, :, :] = self._channel.transform(
-                    self._encoder.encode(self._y[i, j, : self._y_size])
-                ).reshape(*self._x_shape)
-
-    def __len__(self):
-        return self._batches
-
-    def __getitem__(self, idx):
-        batch_x = self._x[idx, :, :, :]
-        batch_y = self._y[idx, :, :, :]
-        return batch_x, batch_y
-
-
 model = Sequential()
 model.add(Input(shape=(None, 2)))
+model.add(Bidirectional(LSTM(units=64, return_sequences=True)))
+model.add(Bidirectional(LSTM(units=64, return_sequences=True)))
+model.add(Bidirectional(LSTM(units=64, return_sequences=True)))
 model.add(Bidirectional(LSTM(units=64, return_sequences=True)))
 model.add(TimeDistributed(Dense(units=1, activation="sigmoid")))
 model.compile(loss="mse", optimizer="adam")
