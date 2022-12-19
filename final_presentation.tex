@@ -1,0 +1,685 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Beamer Presentation
+% LaTeX Template
+% Version 1.0 (10/11/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%   PACKAGES AND THEMES
+%----------------------------------------------------------------------------------------
+
+\documentclass{beamer}
+
+\mode<presentation> {
+
+% The Beamer class comes with a number of default slide themes
+% which change the colors and layouts of slides. Below this is a list
+% of all the themes, uncomment each in turn to see what they look like.
+
+%\usetheme{default}
+%\usetheme{AnnArbor}
+%\usetheme{Antibes}
+%\usetheme{Bergen}
+%\usetheme{Berkeley}
+%\usetheme{Berlin}
+%\usetheme{Boadilla}
+%\usetheme{CambridgeUS}
+%\usetheme{Copenhagen}
+%\usetheme{Darmstadt}
+%\usetheme{Dresden}
+%\usetheme{Frankfurt}
+%\usetheme{Goettingen}
+%\usetheme{Hannover}
+%\usetheme{Ilmenau}
+%\usetheme{JuanLesPins}
+%\usetheme{Luebeck}
+\usetheme{Madrid}
+%\usetheme{Malmoe}
+%\usetheme{Marburg}
+%\usetheme{Montpellier}
+%\usetheme{PaloAlto}
+%\usetheme{Pittsburgh}
+%\usetheme{Rochester}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+%\usetheme{Warsaw}
+
+% As well as themes, the Beamer class has a number of color themes
+% for any slide theme. Uncomment each of these in turn to see how it
+% changes the colors of your current slide theme.
+
+%\usecolortheme{albatross}
+%\usecolortheme{beaver}
+%\usecolortheme{beetle}
+%\usecolortheme{crane}
+%\usecolortheme{dolphin}
+%\usecolortheme{dove}
+%\usecolortheme{fly}
+%\usecolortheme{lily}
+%\usecolortheme{orchid}
+%\usecolortheme{rose}
+%\usecolortheme{seagull}
+%\usecolortheme{seahorse}
+%\usecolortheme{whale}
+%\usecolortheme{wolverine}
+
+
+
+
+
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+%\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+%\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides uncomment this line
+}
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%
+%%%
+%%%     BEGINNING OF CUSTOM COMMANDS 
+%%%
+%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\usepackage{amsgen, amstext, amsbsy, amsopn, amsfonts}
+\usepackage{latexsym, amssymb, amsmath, amscd, amsthm}
+\usepackage{verbatim, lscape, xcolor, mathtools, tikz, tcolorbox}
+\usepackage{enumerate, collcell, array, multirow, tabularx}
+
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks   = true, %Colours links instead of ugly boxes
+	urlcolor     = blue, %Colour for external hyperlinks
+	linkcolor    = blue, %Colour of internal links
+	citecolor   = red %Colour of citations
+} 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%    MATRIX CONSTRUCTIONS     %%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand {\mat}  [1] {\left[\begin{array}{#1}}
+\newcommand {\rix}      {\end{array}\right]}
+
+
+\def\bmatrix#1{\left[\matrix{#1}\right]}
+\def\kbyk{k \times k}
+\def\mbym{m \times m}
+\def\mbyn{m \times n}
+\def\nbyn{n \times n}
+\def\pbyp{p \times p}
+\def\pbyn{p \times n}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%     OCCASIONAL USE    %%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\<}				{\langle}
+\renewcommand{\>}      		{\rangle}
+\newcommand{\nin}			{\noindent}
+\newcommand{\tensor}        {\otimes}
+\newcommand{\dsum}          {\oplus}
+\newcommand{\adj}			{{\textstyle \star}}
+
+\def\wt{\widetilde}
+\def\wh{\widehat}
+\def\ov{\overline}
+
+\newcommand{\vareps}   		{\varepsilon}
+\renewcommand{\l}       	{\ensuremath{\lambda}}
+\newcommand{\la}        	{\ensuremath{\lambda}}
+
+\renewcommand{\a}       	{\ensuremath{\alpha}}
+\renewcommand{\b}			{\ensuremath{\beta}}
+\newcommand{\g}       		{\ensuremath{\gamma}}
+\renewcommand{\d}			{\ensuremath{\delta}}
+\newcommand{\e}				{\ensuremath{\eta}}
+\renewcommand{\k}       	{\ensuremath{\kappa}}
+\newcommand{\f}       		{\ensuremath{\phi}}
+\newcommand{\s}       		{\sigma}  
+\renewcommand{\t}       	{\tau}	
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%    NORM SHORTCUTRS     %%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\normt#1{\|#1\|_2}
+\def\normp#1{\|#1\|_p}
+\def\normtq#1{\|\,#1\,\|_2}
+\def\normo#1{\|#1\|_\infty}
+\def\norm#1{\|#1\|}
+\def\normF#1{\|#1\|_F}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%     MATH OPERATORS   %%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\max{\mathop{\rm max}}
+\def\rank{\mathop{\rm rank}}
+\def\min{\mathop{\rm min}}
+\def\rev{\mathop{\rm rev}}
+\def\diag{\mathop{\rm diag}}
+\def\det{\mathop{\rm det}}
+\def\grade{\mathop{\rm grade}}
+\def\ord{\mathop{\rm ord}}
+\def\deg{\mathop{\rm deg}}
+\def\trace{\mathop{\sf trace}}
+\def\sign{\mathop{\rm sign}}
+\def\span{\mathop{\sf span}}
+\def\colsp{\mathop{\sf ColSp}}
+\def\rowsp{\mathop{\sf RowSp}}
+\def\minor	{\mathop{\rm minor}}
+\def\cof{\mathop{\rm cof}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%     MACROS   %%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\mystrut#1{\rule{0cm}{#1}}  % E.g. 0.4cm % adds vspace after rule
+
+\def\rom#1{{\upshape #1}}
+\newcommand{\parens}[1]{\rom{(}#1\rom{)}}
+\newcommand{\brackets}[1]{\rom{[}#1\rom{]}}
+
+\def\scalar#1{\langle #1\rangle}
+\def\defeq{\stackrel {\mathrm{def}} {=\hspace{-0.07in}=} }
+
+\newcommand{\mathand}  {\quad\mathrm{and}\quad}
+\newcommand{\mmathand} {\qquad\mathrm{and}\qquad}
+\newcommand{\mathwhere}  {\quad\mathrm{where}\quad}
+\newcommand{\mmathwhere} {\qquad\mathrm{where}\qquad}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% For fine-tuning spacing in \sqrt etc=.  From \cite[p.~155]{knut99}.
+% In math mode, @ will act as a macro that adds 1 unit of space.
+\mathcode`@="8000 % Make @ behave as per catcode 13 (active).  TeXbook p. 155.
+{\catcode`\@=\active\gdef@{\mkern1mu}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%  Uppercase GREEK Characters Italic   %%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Make uppercase Greek characters italic.
+% Copied from latex.ltx and changed second digit from 0 (roman font)
+% to 1 (math italic).
+\mathchardef\Gamma="7100
+\mathchardef\Delta="7101
+\mathchardef\Theta="7102
+\mathchardef\Lambda="7103
+\mathchardef\Xi="7104
+\mathchardef\Pi="7105
+\mathchardef\Sigma="7106
+\mathchardef\Upsilon="7107
+\mathchardef\Phi="7108
+\mathchardef\Psi="7109
+\mathchardef\Omega="710A
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%     SCRIPT LETTERS   %%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\cA}{{\cal A}}
+\newcommand{\cB}{{\cal B}}
+\newcommand{\cC}{{\cal C}}
+\newcommand{\cD}{{\cal D}}
+\newcommand{\cE}{{\cal E}}
+\newcommand{\cF}{{\cal F}}
+\newcommand{\cG}{{\cal G}}
+\newcommand{\cH}{{\cal H}}
+\newcommand{\cI}{{\cal I}}
+\newcommand{\cJ}{{\cal J}}
+\newcommand{\cK}{{\cal K}}
+\newcommand{\cL}{{\cal L}}
+\newcommand{\cM}{{\cal M}}
+\newcommand{\cN}{{\cal N}}
+\newcommand{\cO}{{\cal O}}
+\newcommand{\cP}{{\cal P}}
+\newcommand{\cQ}{{\cal Q}}
+\newcommand{\cR}{{\cal R}}
+\newcommand{\cS}{{\cal S}}
+\newcommand{\cT}{{\cal T}}
+\newcommand{\cU}{{\cal U}}
+\newcommand{\cV}{{\cal V}}
+\newcommand{\cW}{{\cal W}}
+\newcommand{\cX}{{\cal X}}
+\newcommand{\cY}{{\cal Y}}
+\newcommand{\cZ}{{\cal Z}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%     BLACKBOARD LETTERS  %%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\bA}{\mathbb{A}}
+\newcommand{\bB}{\mathbb{B}}
+\newcommand{\bC}{\mathbb{C}}
+\newcommand{\bD}{\mathbb{D}}
+\newcommand{\bE}{\mathbb{E}}
+\newcommand{\bF}{\mathbb{F}}
+\newcommand{\bG}{\mathbb{G}}
+\newcommand{\bH}{\mathbb{H}}
+\newcommand{\bI}{\mathbb{I}}
+\newcommand{\bJ}{\mathbb{J}}
+\newcommand{\bK}{\mathbb{K}}
+\newcommand{\bL}{\mathbb{L}}
+\newcommand{\bM}{\mathbb{M}}
+\newcommand{\bN}{\mathbb{N}}
+\newcommand{\bO}{\mathbb{O}}
+\newcommand{\bP}{\mathbb{P}}
+\newcommand{\bQ}{\mathbb{Q}}
+\newcommand{\bR}{\mathbb{R}}
+\newcommand{\bS}{\mathbb{S}}
+\newcommand{\bT}{\mathbb{T}}
+\newcommand{\bU}{\mathbb{U}}
+\newcommand{\bV}{\mathbb{V}}
+\newcommand{\bW}{\mathbb{W}}
+\newcommand{\bX}{\mathbb{X}}
+\newcommand{\bY}{\mathbb{Y}}
+\newcommand{\bZ}{\mathbb{Z}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%     SANS SERIF LETTERS  %%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\sA}{\mathsf{A}}
+\newcommand{\sB}{\mathsf{B}}
+\newcommand{\sC}{\mathsf{C}}
+\newcommand{\sD}{\mathsf{D}}
+\newcommand{\sE}{\mathsf{E}}
+\newcommand{\sF}{\mathsf{F}}
+\newcommand{\sG}{\mathsf{G}}
+\newcommand{\sH}{\mathsf{H}}
+\newcommand{\sI}{\mathsf{I}}
+\newcommand{\sJ}{\mathsf{J}}
+\newcommand{\sK}{\mathsf{K}}
+\newcommand{\sL}{\mathsf{L}}
+\newcommand{\sM}{\mathsf{M}}
+\newcommand{\sN}{\mathsf{N}}
+\newcommand{\sO}{\mathsf{O}}
+\newcommand{\sP}{\mathsf{P}}
+\newcommand{\sQ}{\mathsf{Q}}
+\newcommand{\sR}{\mathsf{R}}
+\newcommand{\sS}{\mathsf{S}}
+\newcommand{\sT}{\mathsf{T}}
+\newcommand{\sU}{\mathsf{U}}
+\newcommand{\sV}{\mathsf{V}}
+\newcommand{\sW}{\mathsf{W}}
+\newcommand{\sX}{\mathsf{X}}
+\newcommand{\sY}{\mathsf{Y}}
+\newcommand{\sZ}{\mathsf{Z}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%     BOLDFACE VECTROS     %%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\bfa{\mathbf{a}}
+\def\bfb{\mathbf{b}}
+\def\bfc{\mathbf{c}}
+\def\bfd{\mathbf{d}}
+\def\bfe{\mathbf{e}}
+\def\bfo{\mathbf{0}}
+\def\bfp{\mathbf{p}}
+\def\bfq{\mathbf{q}}
+\def\bfr{\mathbf{r}}
+\def\bfs{\mathbf{s}}
+\def\bft{\mathbf{t}}
+\def\bfu{\mathbf{u}}
+\def\bfv{\mathbf{v}}
+\def\bfw{\mathbf{w}}
+\def\bfx{\mathbf{x}}
+\def\bfy{\mathbf{y}}
+\def\bfz{\mathbf{z}}	
+
+\newcommand{\zvec}    {\ensuremath{\mathbf{0}}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%      COLORS      %%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{colortbl}
+% \usepackage{xcolor}
+%
+\definecolor{lightgrey}{rgb}{.9,.9,.9}
+\definecolor{mediumgrey}{rgb}{.6,.6,.6}
+\definecolor{darkgrey}{rgb}{.3,.3,.3}
+%
+\definecolor{lightgreen}{rgb}{0.7,1.0,0.7}
+\definecolor{mediumgreen}{rgb}{0.3,1.0,0.3}
+\definecolor{darkgreen}{rgb}{0.0,0.7,0.0}
+%
+\definecolor{lightred}{rgb}{1.0,0.6,0.6}
+\definecolor{mediumred}{rgb}{1.0,0.3,0.3}
+\definecolor{darkred}{rgb}{0.8,0.0,0.0}
+%
+\definecolor{lightblue}{rgb}{0.8,0.8,1.0}
+\definecolor{mediumblue}{rgb}{0.5,0.5,1.0}
+\definecolor{darkblue}{rgb}{0.1,0.1,0.9}
+%
+\definecolor{green}{rgb}{0.0,0.7,0.0}
+\definecolor{red}{rgb}{1.0,0.0,0.0}
+%
+\definecolor{magenta}{rgb}{.75,0,.75}
+\definecolor{hotpink}{rgb}{0.9,0,0.5}
+\definecolor{cyan}{rgb}{0,0.8, .8}
+%
+
+\def\tcr#1{\textcolor{red}{#1}}
+\def\tcb#1{\textcolor{blue}{#1}}
+\def\tcg#1{\textcolor{darkgreen}{#1}}
+\def\tcp#1{\textcolor{hotpink}{#1}}
+
+
+
+
+%\newcommand{\rev}{{\mbox{\rm rev\,}}}
+%\def\rev{\mathrm{rev}@@}
+%\def\rev{\mathrm{rev}@}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%     VP-Added Shortcuts     %%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%% Constant matrices 
+\def\Fn{\mathbb{F}^{n}}
+\def\Fm{\mathbb{F}^{m}}
+\def\Fp{\mathbb{F}^{p}}
+
+\def\Fnn{\mathbb{F}^{n\times n}}
+\def\Fmm{\mathbb{F}^{m\times m}}
+\def\Fpp{\mathbb{F}^{p\times p}}
+
+\def\Fmn{\mathbb{F}^{m\times n}}
+\def\Fnm{\mathbb{F}^{n\times m}}
+
+\def\Fmp{\mathbb{F}^{m\times p}}
+\def\Fpm{\mathbb{F}^{p\times m}}
+
+\def\Fnp{\mathbb{F}^{n\times p}}
+\def\Fpn{\mathbb{F}^{p\times n}}
+
+%%%%% Constant matrices over C
+\def\Rn{\mathbb{R}^{n}}
+\def\Rm{\mathbb{R}^{m}}
+\def\Rp{\mathbb{R}^{p}}
+
+\def\Rnn{\mathbb{R}^{n\times n}}
+\def\Rmm{\mathbb{R}^{m\times m}}
+\def\Rpp{\mathbb{R}^{p\times p}}
+
+\def\Rmn{\mathbb{R}^{m\times n}}
+\def\Rnm{\mathbb{R}^{n\times m}}
+
+\def\Rmp{\mathbb{R}^{m\times p}}
+\def\Rpm{\mathbb{R}^{p\times m}}
+
+\def\Rnp{\mathbb{R}^{n\times p}}
+\def\Rpn{\mathbb{R}^{p\times n}}
+
+%%%%% Constant matrices over C
+\def\Cn{\mathbb{C}^{n}}
+\def\Cm{\mathbb{C}^{m}}
+\def\Cp{\mathbb{C}^{p}}
+
+\def\Cnn{\mathbb{C}^{n\times n}}
+\def\Cmm{\mathbb{C}^{m\times m}}
+\def\Cpp{\mathbb{C}^{p\times p}}
+
+\def\Cmn{\mathbb{C}^{m\times n}}
+\def\Cnm{\mathbb{C}^{n\times m}}
+
+\def\Cmp{\mathbb{C}^{m\times p}}
+\def\Cpm{\mathbb{C}^{p\times m}}
+
+\def\Cnp{\mathbb{C}^{n\times p}}
+\def\Cpn{\mathbb{C}^{p\times n}}
+
+%%%%% Polynomial matrices 
+\def\pFnn{\mathbb{F}^{n\times n}[\lambda]}
+\def\pFmm{\mathbb{F}^{m\times m}[\lambda]}
+\def\pFpp{\mathbb{F}^{p\times p}[\lambda]}
+
+\def\pFmn{\mathbb{F}^{m\times n}[\lambda]}
+\def\pFnm{\mathbb{F}^{n\times m}[\lambda]}
+
+\def\pFmp{\mathbb{F}^{m\times p}[\lambda]}
+\def\pFpm{\mathbb{F}^{p\times m}[\lambda]}
+
+\def\pFnp{\mathbb{F}^{n\times p}[\lambda]}
+\def\pFpn{\mathbb{F}^{p\times n}[\lambda]}
+
+%%%%% Rational matrices 
+\def\rFnn{\mathbb{F}^{n\times n}(\lambda)}
+\def\rFmm{\mathbb{F}^{m\times m}(\lambda)}
+\def\rFpp{\mathbb{F}^{p\times p}(\lambda)}
+
+\def\rFmn{\mathbb{F}^{m\times n}(\lambda)}
+\def\rFnm{\mathbb{F}^{n\times m}(\lambda)}
+
+\def\rFmp{\mathbb{F}^{m\times p}(\lambda)}
+\def\rFpm{\mathbb{F}^{p\times m}(\lambda)}
+
+\def\rFnp{\mathbb{F}^{n\times p}(\lambda)}
+\def\rFpn{\mathbb{F}^{p\times n}(\lambda)}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\renewcommand{\l}       {\ensuremath{\lambda}}
+%    \newcommand{\la}        {\ensuremath{\lambda}}
+\renewcommand{\d}		{\ensuremath{\delta}}
+\renewcommand{\a}       {\ensuremath{\alpha}}
+\renewcommand{\b}		{\ensuremath{\beta}}
+%    \newcommand{\g}       	{\ensuremath{\gamma}}
+%    \newcommand{\f}       	{\ensuremath{\phi}}
+
+\usepackage{calligra}
+
+\DeclareMathAlphabet{\mathcalligra}{T1}{calligra}{m}{n}
+\usepackage{mathrsfs}     
+\newcommand{\fL}{\mathscr{L}}
+    
+
+\newcommand{\highlightgreenten}[1]{\colorbox{green!10}{$\displaystyle #1$}}
+\newcommand{\highlightbluetwofive}[1]{\colorbox{blue!25}{$\displaystyle #1$}}
+\newcommand{\highlightblueten}[1]{\colorbox{blue!10}{$\displaystyle #1$}}
+\newcommand{\highlightredtwozero}[1]{\colorbox{red!20}{$\displaystyle #1$}}      
+\newcommand{\highlightyellow}[1]{\colorbox{yellow}{$\displaystyle #1$}}                          
+\newcommand{\highlightmagentaten}[1]{\colorbox{magenta!10}{$\displaystyle #1$}}
+\newcommand{\highlightgreen}[1]{\colorbox{green!30}{$\displaystyle #1$}}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%      SHORTCUTS TO COLORED BOXES     %%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% This commands end the {tcolorbox}
+\newcommand {\overbox}      {\end{tcolorbox}}
+
+%%% This commands starts {tcolorbox} for Definitions - green color scheme
+\newcommand {\defbox}  [1]		{\begin{tcolorbox}[width=\textwidth,colback={black!1},title={\large \bf Definition:\; #1}, colbacktitle=green!30,coltitle=black]}
+	
+	
+%%% This commands starts {tcolorbox} for Theorems - blue color scheme
+\newcommand {\thmbox}  [1]		{\begin{tcolorbox}[width=\textwidth,colback={black!1},title={\large \bf Theorem:\;#1}, colbacktitle=royalblue!30,coltitle=black]}
+		
+%%% This command makes a basic gray box 
+\newcommand {\basicbox} 		{\begin{tcolorbox}[width=\textwidth,colback={black!1}]}
+			
+%%% This command makes a redish titled box with text in title
+\newcommand {\titledbox}  [1]		{\begin{tcolorbox}[width=\textwidth,colback={black!1},title={\large \bf #1}, colbacktitle=red!15,coltitle=black]}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%
+%%%
+%%%      END OF CUSTOM COMMANDS 
+%%%
+%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%----------------------------------------------------------------------------------------
+%   TITLE PAGE
+%----------------------------------------------------------------------------------------
+\AtBeginSection[]
+{
+    \begin{frame}
+        \frametitle{Table of Contents}
+        \tableofcontents[currentsection]
+    \end{frame}
+}
+
+\title[RNN Decoder]{RNN Convolutional Code Decoder} % The short title appears at the bottom of every slide, the full title is only on the title page
+
+\author{Calvin Higgins, Justin Watkins, Tuyetlinh Nguyen} % Your name
+%\author{C. P.}
+\institute[URI] % Your institution as it will appear on the bottom of every slide, may be shorthand to save space
+{
+University of Rhode Island %\\ % Your institution for the title page
+%%\medskip
+%%\textit{john@smith.com} % Your email address
+}
+\date{December 21, 2022} % Date, can be changed to a custom date
+
+\begin{document}
+
+%----------------------------------------------------------------------------------------
+%   TITLE SLIDES
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\titlepage % Print the title page as the first slide
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Overview} % Table of contents slide, comment this block out to remove it
+\tableofcontents % Throughout your presentation, if you choose to use \section{} and \subsection{} commands, these will automatically be printed on this slide as an overview of your presentation
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+%   PRESENTATION SLIDES
+%----------------------------------------------------------------------------------------
+
+%------------------------------------------------
+\section{Goal and Motivation} 
+%------------------------------------------------
+
+\begin{frame}{Goal and Motivation}
+
+
+\end{frame}
+
+%------------------------------------------------
+\section{Background} 
+%------------------------------------------------
+
+%------------------------------------------------
+\subsection{The Viterbi Decoder} 
+%------------------------------------------------
+
+\begin{frame}{The Viterbi Decoder}
+
+
+\end{frame}
+
+%------------------------------------------------
+\section{Tools} 
+%------------------------------------------------
+
+%------------------------------------------------
+\subsection{scikit-dsp-comm} 
+%------------------------------------------------
+
+\begin{frame}{scikit-dsp-comm}
+
+
+\end{frame}
+
+%------------------------------------------------
+\section{Our Model} 
+%------------------------------------------------
+
+%------------------------------------------------
+\subsection{RNN (?)} 
+%------------------------------------------------
+
+\begin{frame}{RNN (?)}
+
+
+\end{frame}
+
+%------------------------------------------------
+\section{Results} 
+%------------------------------------------------
+
+\begin{frame}{Results}
+
+
+\end{frame}
+
+%------------------------------------------------
+\section{References}
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{References}
+\footnotesize{
+\begin{thebibliography}{9} 
+
+\setbeamertemplate{bibliography item}[online]
+\bibitem[Brownlee, 2019]{p1} Jason Brownlee (2019)
+\newblock A Gentle Introduction to Markov Chain Monte Carlo for Probability
+\newblock \emph{Machine Learning Mastery} https://machinelearningmastery.com/markov-chain-monte-carlo-for-probability/.
+
+\setbeamertemplate{bibliography item}[online]
+\bibitem[Brownlee, 2019]{p1} Marco Taboga (2021)
+\newblock Markov Chain Monte Carlo (MCMC) Methods
+\newblock \emph{StatLect - Lectures on Probability Theory and Mathematical Statistics} https://www.statlect.com/fundamentals-of-statistics/Markov-Chain-Monte-Carlo.
+
+\setbeamertemplate{bibliography item}[book]
+\bibitem[Dobrow, 2016]{p1} Robert P. Dobrow (2016)
+\newblock Markov Chain Monte Carlo
+\newblock \emph{Introduction to Stochastic Processes With R}, Chapter 5, 181 -- 222.
+
+\end{thebibliography}
+}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}
+\Huge{\centerline{Questions?}}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\end{document}
