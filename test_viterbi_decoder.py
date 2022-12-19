@@ -1,6 +1,5 @@
 import numpy as np
 from numpy.random import randint
-from scikit_dsp_comm import sk_dsp_comm
 from scikit_dsp_comm.sk_dsp_comm import fec_conv, digitalcom
 from viterbi_decoder import ViterbiDecoder
 

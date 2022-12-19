@@ -1,5 +1,4 @@
 import numpy as np
-from scikit_dsp_comm import sk_dsp_comm
 from scikit_dsp_comm.sk_dsp_comm import fec_conv
 
 
