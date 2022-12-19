@@ -9,14 +9,19 @@ class BurstChannel:
         self._burst_length = burst_length
 
     def transform(self, data: np.ndarray) -> np.ndarray:
-        data = data.astype(np.bool8, copy=False)
-        possible_burst_idxs = np.arange(data.size + (self._burst_length - 1))
-        burst_idxs = np.random.choice(
-            possible_burst_idxs, replace=False, p=self._distribution
-        )
-        for i in range(burst_idxs.size):
-            idx = burst_idxs[i]
-            l = max(idx, 0)
-            r = idx + self._burst_length
+        data = data.astype(np.uint8, copy=False)
+        for i in range(-self._burst_length + 1, data.size):
+            if not np.random.choice((0, 1), p=self._distribution):
+                continue
+            l = max(i, 0)
+            r = min(data.size - 1, i + self._burst_length + 1)
             data[l:r] ^= 1
+
         return data
+
+
+if __name__ == "__main__":
+    channel = BurstChannel(0.1, 6)
+    for _ in range(20):
+        data = np.array([0, 1, 0, 1, 0, 0, 1, 0, 1, 0])
+        print(channel.transform(data))
