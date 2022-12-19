@@ -4,7 +4,7 @@
 
 This project relies on the scikit-dsp-comm package. The documentation for the package can be found [here](https://scikit-dsp-comm.readthedocs.io/en/latest/index.html). 
 
-In order to run the project, you will need to install this package [INSTRUCTIONS](https://scikit-dsp-comm.readthedocs.io/en/latest/readme.html#getting-set-up-on-your-system). The developers recommends the following:
+In order to run the project, you will need to install this package. Instructions can be found [here](https://scikit-dsp-comm.readthedocs.io/en/latest/readme.html#getting-set-up-on-your-system). The developers recommend the following:
 
 1. Navigate to the project directory and clone the package repository here.
 
