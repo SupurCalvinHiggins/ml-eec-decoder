@@ -11,7 +11,7 @@ class TestDecoder(unittest.TestCase):
         transfer_matrix = [[1, 1, 1, 0, 1], [1, 0, 0, 1, 1]]
         vdecode = ViterbiDecoder(transfer_matrix)
 
-        # Lines 12 to 31 are from package documentation
+        # Lines 15 to 28 are from package documentation
         cc1 = fec_conv.FECConv(('11101','10011'))
         state = '0000'
 
