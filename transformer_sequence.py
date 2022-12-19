@@ -58,7 +58,7 @@ class TransformerSequence(tf.keras.utils.Sequence):
         """
         X_batch = self._X[idx, :, :, :]
         y_batch = self._y[idx, :, :, :]
-        return X_batch, y_batch
+        return X_batch.astype(np.uint8), y_batch.astype(np.uint8)
 
     def on_epoch_end(self) -> None:
         """Generates a new dataset"""

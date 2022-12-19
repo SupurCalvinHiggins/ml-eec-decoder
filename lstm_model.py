@@ -1,14 +1,23 @@
 from keras.models import Sequential, load_model
 from keras.layers import LSTM, Dense, TimeDistributed, Input, Bidirectional
+from keras.callbacks import ReduceLROnPlateau
 from feed_forward_encoder import FeedForwardEncoder
 from binary_symmetric_channel import BinarySymmetricChannel
 from transformer_pipeline import TransformerPipeline
 from transformer_sequence import TransformerSequence
+from viterbi_decoder import ViterbiDecoder
+import numpy as np
 
 
-TRANSFER_MATRIX = [[1, 1, 0], [1, 0, 1]]
-CROSSOVER_PROBABILITY = 0.1
-DATA_SYMBOL_COUNT = 62
+TRANSFER_MATRIX = [[1, 1, 1], [1, 0, 1]]
+# TRANSFER_MATRIX = [
+#     [1, 1, 0, 1, 1, 1],
+#     [1, 0, 0, 1, 0, 1],
+#     [1, 1, 0, 1, 0, 1],
+#     [0, 1, 1, 1, 1, 0],
+# ]
+CROSSOVER_PROBABILITY = 0.02
+DATA_SYMBOL_COUNT = 64 - (len(TRANSFER_MATRIX[0]) - 1)
 SYMBOL_SIZE = len(TRANSFER_MATRIX)
 
 
@@ -32,15 +41,48 @@ def build_model() -> Sequential:
     model.add(Bidirectional(LSTM(units=64, return_sequences=True)))
     model.add(Bidirectional(LSTM(units=64, return_sequences=True)))
     model.add(TimeDistributed(Dense(units=1, activation="sigmoid")))
-    model.compile(loss="mse", optimizer="adam")
+    model.compile(loss="mse", optimizer="nadam")
     return model
+
+
+def approximate_baseline_loss(sequence: TransformerSequence) -> float:
+    total_error = 0
+    for i in range(len(sequence)):
+        X_batch, y_batch = sequence[i]
+        for j in range(X_batch.shape[0]):
+            decoder = ViterbiDecoder(TRANSFER_MATRIX)
+            X_sample = X_batch[j].flatten()
+            y_sample = y_batch[j].flatten()
+            y_baseline = decoder.decode(X_sample)
+            y_baseline[-2:] = 0
+            # print(y_sample.astype(np.uint8))
+            # print(y_baseline.astype(np.uint8))
+            norm = (
+                (y_sample.astype(np.uint8) ^ y_baseline.astype(np.uint8)) ** 2
+            ).sum()
+            # print(norm)
+            # print("*" * 100)
+            total_error += norm
+
+    sequence.on_epoch_end()
+
+    samples = len(sequence) * sequence[0][0].size
+    return total_error / samples
 
 
 def main() -> None:
     sequence = build_sequence()
+
+    baseline_loss = approximate_baseline_loss(sequence)
+    print("*" * 100)
+    print(f"Approximate baseline loss: {baseline_loss}")
+    print("*" * 100)
+
     model = build_model()
     model.summary()
-    model.fit(sequence, epochs=1000, verbose=1)
+
+    reduce_lr = ReduceLROnPlateau(monitor="loss", patience=5)
+    model.fit(sequence, epochs=1000, callbacks=[reduce_lr], verbose=1)
     results = model.evaluate(sequence, verbose=1)
     print(results)
 
