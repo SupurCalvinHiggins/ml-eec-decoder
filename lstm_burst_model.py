@@ -1,13 +1,14 @@
 from keras.models import Sequential, load_model
 from keras.layers import LSTM, Dense, TimeDistributed, Input, Bidirectional
-from keras.callbacks import ReduceLROnPlateau
+from keras.callbacks import ReduceLROnPlateau, EarlyStopping
 from feed_forward_encoder import FeedForwardEncoder
-from binary_symmetric_channel import BinarySymmetricChannel
 from burst_channel import BurstChannel
 from transformer_pipeline import TransformerPipeline
 from transformer_sequence import TransformerSequence
 from viterbi_decoder import ViterbiDecoder
 import numpy as np
+import os
+import csv
 
 
 TRANSFER_MATRIX = [[1, 1, 1], [1, 0, 1]]
@@ -16,10 +17,9 @@ DATA_SYMBOL_COUNT = 64 - (len(TRANSFER_MATRIX[0]) - 1)
 SYMBOL_SIZE = len(TRANSFER_MATRIX)
 
 
-def build_sequence() -> TransformerSequence:
+def build_sequence(burst_length: int) -> TransformerSequence:
     encoder = FeedForwardEncoder(transfer_matrix=TRANSFER_MATRIX)
-    channel = BurstChannel(CROSSOVER_PROBABILITY, 1)  # won at 9 with 0.04
-    # channel = BinarySymmetricChannel(CROSSOVER_PROBABILITY)
+    channel = BurstChannel(CROSSOVER_PROBABILITY, burst_length)
     pipeline = TransformerPipeline(transformers=[encoder, channel])
     sequence = TransformerSequence(
         transformer=pipeline,
@@ -51,13 +51,9 @@ def approximate_baseline_loss(sequence: TransformerSequence) -> float:
             y_sample = y_batch[j].flatten()
             y_baseline = decoder.decode(X_sample)
             y_baseline[-2:] = 0
-            # print(y_sample.astype(np.uint8))
-            # print(y_baseline.astype(np.uint8))
             norm = (
                 (y_sample.astype(np.uint8) ^ y_baseline.astype(np.uint8)) ** 2
             ).sum()
-            # print(norm)
-            # print("*" * 100)
             total_error += norm
 
     sequence.on_epoch_end()
@@ -67,21 +63,41 @@ def approximate_baseline_loss(sequence: TransformerSequence) -> float:
 
 
 def main() -> None:
-    sequence = build_sequence()
+    for burst_length in range(1, 32):
+        sequence = build_sequence(burst_length)
 
-    baseline_loss = approximate_baseline_loss(sequence)
-    print("*" * 100)
-    print(f"Approximate baseline loss: {baseline_loss}")
-    print("*" * 100)
-    exit()
+        baseline_loss = approximate_baseline_loss(sequence)
+        print("*" * 100)
+        print(f"Approximate baseline loss: {baseline_loss}")
+        print("*" * 100)
 
-    model = build_model()
-    model.summary()
+        model = build_model()
+        model.summary()
 
-    reduce_lr = ReduceLROnPlateau(monitor="loss", patience=5)
-    model.fit(sequence, epochs=1000, callbacks=[reduce_lr], verbose=1)
-    results = model.evaluate(sequence, verbose=1)
-    print(results)
+        early_stopping = EarlyStopping(
+            monitor="loss",
+            patience=10,
+            restore_best_weights=True,
+        )
+        reduce_lr = ReduceLROnPlateau(monitor="loss", patience=5)
+        model.fit(
+            sequence,
+            epochs=1000,
+            callbacks=[reduce_lr, early_stopping],
+            verbose=1,
+        )
+        model_path = os.path.join(
+            "lstm_burst_model_output", f"burst_length_{burst_length}.h5"
+        )
+        model.save(model_path)
+        results = model.evaluate(sequence, verbose=1)
+        print("*" * 100)
+        print(f"Evaluate loss: {results}")
+        print("*" * 100)
+
+        csv_path = os.path.join("lstm_burst_model_output", "out.csv")
+        with open(csv_path, "a") as f:
+            f.writelines([f"{burst_length},{baseline_loss},{results}\n"])
 
 
 # 4 stacked lstm units=64 layers

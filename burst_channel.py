@@ -14,14 +14,14 @@ class BurstChannel:
             if not np.random.choice((0, 1), p=self._distribution):
                 continue
             l = max(i, 0)
-            r = min(data.size - 1, i + self._burst_length + 1)
+            r = min(data.size - 1, i + self._burst_length)
             data[l:r] ^= 1
 
         return data
 
 
 if __name__ == "__main__":
-    channel = BurstChannel(0.1, 6)
+    channel = BurstChannel(0.1, 5)
     for _ in range(20):
-        data = np.array([0, 1, 0, 1, 0, 0, 1, 0, 1, 0])
+        data = np.ones(10)
         print(channel.transform(data))
