@@ -594,10 +594,33 @@ University of Rhode Island %\\ % Your institution for the title page
 %------------------------------------------------
 
 %------------------------------------------------
-\subsection{Convolutional Codes} 
+\subsection{Convolutional Encoding} 
 %------------------------------------------------
 
 \begin{frame}{Convolutional Codes}
+
+%Introduced in 1955 by Peter Elias, 
+Convolutional codes are a powerful method of encoding messages, by using short memory and convolution operators to sequentially create coded bits. 
+
+\medskip
+
+\begin{block}{Definition}
+A \textbf{linear shift register (LSR)} is a shift register whose input bit is a linear function of its previous state.
+
+\smallskip
+
+The most commonly used linear function of single bits XOR.
+\end{block}
+
+\medskip
+
+A convolutional encoder utilizes linear shift registers to encode $k$ input bits into $n$ output bits, thus yielding a code of \textbf{rate} $R=\frac{k}{n}$. Each output bit depends on the previous $L$ input bits, where $L$ is called the \textbf{constraint length}.
+
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Convolutional Encoding}
 
 This encoder depicted in the figure below corresponds to the following \textbf{generator polynomials}:
 
@@ -607,6 +630,9 @@ g^{(1)}=1+x^2 \quad \quad & g^{(2)}=1+x+x^2  \\
 g^{(1)}=[1, 0, 1] \quad \quad & g^{(2)}=[1, 1, 1]
 \end{aligned}
 \end{equation}
+
+% power of the term = "n-th" previous bit
+% addition is addition modulo 2 (equivalently XOR)
 
 \begin{figure}[h]
 \centering
@@ -672,14 +698,28 @@ Using the trellis representation of the encoding process, the Viterbi decoder de
 \caption{A possible path along the trellis}
 \end{figure}
 
+% for the sake of time, do not go into details 
+% just mention this is "optimal" bc it is the most likely path (aka the path closest to what we observed - minimizing DISTANCE)
+% shortest distance paths on DAGs are best solved by dynamic programming bc of memoization of "most likely path up to now" / "smallest distance path up to now"
+
 \end{frame}
 
 %------------------------------------------------
-\section{Goal and Motivation} 
+\section{Goal of the Project}
 %------------------------------------------------
 
-\begin{frame}{Goal and Motivation}
+\begin{frame}{Goal of the Project}
 
+In 1996, Wang and Wicker determined that artificial neural networks with hand-picked coefficients can reproduce the optimal Viterbi decoder.
+
+\medskip
+
+\begin{block}{Our Goal}
+\begin{enumerate}
+\item Emulate a convolutional code decoder using neural networks in an attempt to \textbf{learn} this decoder in a data-driven manner. 
+\item Compare its reliability against that of the Viterbi algorithm.
+\end{enumerate}
+\end{block}
 
 \end{frame}
 
@@ -693,7 +733,24 @@ Using the trellis representation of the encoding process, the Viterbi decoder de
 
 \begin{frame}{scikit-dsp-comm}
 
+%Since the Viterbi decoder is optimal, we wanted to use this algorithm to compare against our own model.
 
+%\medskip
+\begin{columns}
+\begin{column}{0.47\textwidth}
+The \href{https://scikit-dsp-comm.readthedocs.io/en/latest/}{scikit-dsp-comm} package ``is a collection of functions and classes to support signal processing and communications theory teaching and research."
+
+\medskip
+
+Due to some discrepancies between our model and the Viterbi decoder from the package, a \href{https://github.com/SupurCalvinHiggins/scikit-dsp-comm.git}{patch} was created to ensure both outputs were comparable. 
+
+\end{column}
+\begin{column}{0.47\textwidth}
+\begin{figure}[h]
+\includegraphics[scale=0.28]{scikit-dsp-comm-logo.png}
+\end{figure}
+\end{column}
+\end{columns}
 \end{frame}
 
 %------------------------------------------------
@@ -728,19 +785,19 @@ Using the trellis representation of the encoding process, the Viterbi decoder de
 \begin{thebibliography}{9} 
 
 \setbeamertemplate{bibliography item}[online]
-\bibitem[Brownlee, 2019]{p1} Jason Brownlee (2019)
-\newblock A Gentle Introduction to Markov Chain Monte Carlo for Probability
-\newblock \emph{Machine Learning Mastery} https://machinelearningmastery.com/markov-chain-monte-carlo-for-probability/.
+\bibitem[Mazal, 2021]{p1} Yair Mazal (2021)
+\newblock Intro to Convolutional Coding — Part I & Part II
+\newblock \emph{Medium - Nerd for Tech} https://medium.com/nerd-for-tech/into-to-convolutional-coding-part-i-d63decab56a0
 
 \setbeamertemplate{bibliography item}[online]
-\bibitem[Brownlee, 2019]{p1} Marco Taboga (2021)
-\newblock Markov Chain Monte Carlo (MCMC) Methods
-\newblock \emph{StatLect - Lectures on Probability Theory and Mathematical Statistics} https://www.statlect.com/fundamentals-of-statistics/Markov-Chain-Monte-Carlo.
+\bibitem[Kim and Oh, 2020]{p1} Hyeji Kim and Sewoong Oh (2020)
+\newblock Decoding convolutional codes
+\newblock \emph{Inventing Codes via Machine Learning} https://deepcomm.github.io/jekyll/pixyll/2020/02/01/learning-viterbi/.
 
 \setbeamertemplate{bibliography item}[book]
-\bibitem[Dobrow, 2016]{p1} Robert P. Dobrow (2016)
-\newblock Markov Chain Monte Carlo
-\newblock \emph{Introduction to Stochastic Processes With R}, Chapter 5, 181 -- 222.
+\bibitem[Moon, 2005]{p1} Todd K. Moon (2005)
+\newblock Chapter 12: Convolutional Codes
+\newblock \emph{Error Correction Coding: Mathematical Methods and Algorithms}, 452 -- 525.
 
 \end{thebibliography}
 }
