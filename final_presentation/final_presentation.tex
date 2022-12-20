@@ -558,7 +558,7 @@
 
 \title[RNN Decoder]{RNN Convolutional Code Decoder} % The short title appears at the bottom of every slide, the full title is only on the title page
 
-\author{Calvin Higgins, Justin Watkins, Tuyetlinh Nguyen} % Your name
+\author[C. Higgins, J. Watkins, T. Nguyen]{Calvin Higgins, Justin Watkins, Tuyetlinh Nguyen} % Your name
 %\author{C. P.}
 \institute[URI] % Your institution as it will appear on the bottom of every slide, may be shorthand to save space
 {
@@ -581,8 +581,8 @@ University of Rhode Island %\\ % Your institution for the title page
 %----------------------------------------------------------------------------------------
 
 \begin{frame}
-\frametitle{Overview} % Table of contents slide, comment this block out to remove it
-\tableofcontents % Throughout your presentation, if you choose to use \section{} and \subsection{} commands, these will automatically be printed on this slide as an overview of your presentation
+\frametitle{Overview} 
+\tableofcontents 
 \end{frame}
 
 %----------------------------------------------------------------------------------------
@@ -590,17 +590,96 @@ University of Rhode Island %\\ % Your institution for the title page
 %----------------------------------------------------------------------------------------
 
 %------------------------------------------------
-\section{Goal and Motivation} 
+\section{Background} 
 %------------------------------------------------
 
-\begin{frame}{Goal and Motivation}
+%------------------------------------------------
+\subsection{Convolutional Encoding} 
+%------------------------------------------------
 
+\begin{frame}{Convolutional Codes}
+
+%Introduced in 1955 by Peter Elias, 
+Convolutional codes are a powerful method of encoding messages, by using short memory and convolution operators to sequentially create coded bits. 
+
+\medskip
+
+\begin{block}{Definition}
+A \textbf{linear shift register (LSR)} is a shift register whose input bit is a linear function of its previous state.
+
+\smallskip
+
+The most commonly used linear function of single bits XOR.
+\end{block}
+
+\medskip
+
+A convolutional encoder utilizes linear shift registers to encode $k$ input bits into $n$ output bits, thus yielding a code of \textbf{rate} $R=\frac{k}{n}$. Each output bit depends on the previous $L$ input bits, where $L$ is called the \textbf{constraint length}.
 
 \end{frame}
 
 %------------------------------------------------
-\section{Background} 
+
+\begin{frame}{Convolutional Encoding}
+
+This encoder depicted in the figure below corresponds to the following \textbf{generator polynomials}:
+
+\begin{equation}
+\begin{aligned}
+g^{(1)}=1+x^2 \quad \quad & g^{(2)}=1+x+x^2  \\
+g^{(1)}=[1, 0, 1] \quad \quad & g^{(2)}=[1, 1, 1]
+\end{aligned}
+\end{equation}
+
+% power of the term = "n-th" previous bit
+% addition is addition modulo 2 (equivalently XOR)
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.15]{conv_code.png}
+\caption{Convolutional encoder with rate $R=\frac{1}{2}$ and constraint length $K=2$}
+\end{figure}
+
+%Each transition shown as a red arrow in the figure tells us another one of the original information-bearing bits (shown as a single bit along each arrow). The decoder maintains several possible paths and their accumulated errors in case errors occur. To avoid keeping all 2ᴺ possible paths for an N bits long sequence, only the more likely ones are maintained, while less likely ones are discarded along the way.
+
+% decision depth ?
+
+\end{frame}
+
 %------------------------------------------------
+\subsection{Representations of the Encoding Process} 
+%------------------------------------------------
+
+\begin{frame}{Finite State Machine}
+
+Other representations of this encoder are a \textbf{finite state machine} and a \textbf{trellis}. 
+
+\begin{columns}
+\begin{column}{0.4\textwidth}
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.18]{fsm.png}
+\caption{FSM representation}
+\end{figure}
+
+% depicted as a directed graph with $2^L$ vertices as the possible states and $2^k$ edges as the possible transitions given $k$ input bits. 
+
+\end{column}
+\begin{column}{0.6\textwidth}
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.2]{trellis.png}
+\caption{Trellis representation}
+\end{figure}
+
+\end{column}
+\end{columns}
+
+The single digit on each edge indicates the input bit and the two digits indicates the output according to the generator polynomials.
+
+\end{frame}
 
 %------------------------------------------------
 \subsection{The Viterbi Decoder} 
@@ -608,6 +687,39 @@ University of Rhode Island %\\ % Your institution for the title page
 
 \begin{frame}{The Viterbi Decoder}
 
+\begin{block}{Goal}
+Determine the \textbf{most likely} sequence of states that could have produced the given sequence of received bits
+\end{block}
+
+Using the trellis representation of the encoding process, the Viterbi decoder determines the \textbf{most likely path} along this trellis.
+
+\begin{figure}[h]
+\includegraphics[scale=0.2]{viterbi.png}
+\caption{A possible path along the trellis}
+\end{figure}
+
+% for the sake of time, do not go into details 
+% just mention this is "optimal" bc it is the most likely path (aka the path closest to what we observed - minimizing DISTANCE)
+% shortest distance paths on DAGs are best solved by dynamic programming bc of memoization of "most likely path up to now" / "smallest distance path up to now"
+
+\end{frame}
+
+%------------------------------------------------
+\section{Goal of the Project}
+%------------------------------------------------
+
+\begin{frame}{Goal of the Project}
+
+In 1996, Wang and Wicker determined that artificial neural networks with hand-picked coefficients can reproduce the optimal Viterbi decoder.
+
+\medskip
+
+\begin{block}{Our Goal}
+\begin{enumerate}
+\item Emulate a convolutional code decoder using neural networks in an attempt to \textbf{learn} this decoder in a data-driven manner. 
+\item Compare its reliability against that of the Viterbi algorithm.
+\end{enumerate}
+\end{block}
 
 \end{frame}
 
@@ -621,7 +733,24 @@ University of Rhode Island %\\ % Your institution for the title page
 
 \begin{frame}{scikit-dsp-comm}
 
+%Since the Viterbi decoder is optimal, we wanted to use this algorithm to compare against our own model.
 
+%\medskip
+\begin{columns}
+\begin{column}{0.47\textwidth}
+The \href{https://scikit-dsp-comm.readthedocs.io/en/latest/}{scikit-dsp-comm} package ``is a collection of functions and classes to support signal processing and communications theory teaching and research."
+
+\medskip
+
+Due to some discrepancies between our model and the Viterbi decoder from the package, a \href{https://github.com/SupurCalvinHiggins/scikit-dsp-comm.git}{patch} was created to ensure both outputs were comparable. 
+
+\end{column}
+\begin{column}{0.47\textwidth}
+\begin{figure}[h]
+\includegraphics[scale=0.28]{scikit-dsp-comm-logo.png}
+\end{figure}
+\end{column}
+\end{columns}
 \end{frame}
 
 %------------------------------------------------
@@ -656,19 +785,19 @@ University of Rhode Island %\\ % Your institution for the title page
 \begin{thebibliography}{9} 
 
 \setbeamertemplate{bibliography item}[online]
-\bibitem[Brownlee, 2019]{p1} Jason Brownlee (2019)
-\newblock A Gentle Introduction to Markov Chain Monte Carlo for Probability
-\newblock \emph{Machine Learning Mastery} https://machinelearningmastery.com/markov-chain-monte-carlo-for-probability/.
+\bibitem[Mazal, 2021]{p1} Yair Mazal (2021)
+\newblock Intro to Convolutional Coding — Part I & Part II
+\newblock \emph{Medium - Nerd for Tech} https://medium.com/nerd-for-tech/into-to-convolutional-coding-part-i-d63decab56a0
 
 \setbeamertemplate{bibliography item}[online]
-\bibitem[Brownlee, 2019]{p1} Marco Taboga (2021)
-\newblock Markov Chain Monte Carlo (MCMC) Methods
-\newblock \emph{StatLect - Lectures on Probability Theory and Mathematical Statistics} https://www.statlect.com/fundamentals-of-statistics/Markov-Chain-Monte-Carlo.
+\bibitem[Kim and Oh, 2020]{p1} Hyeji Kim and Sewoong Oh (2020)
+\newblock Decoding convolutional codes
+\newblock \emph{Inventing Codes via Machine Learning} https://deepcomm.github.io/jekyll/pixyll/2020/02/01/learning-viterbi/.
 
 \setbeamertemplate{bibliography item}[book]
-\bibitem[Dobrow, 2016]{p1} Robert P. Dobrow (2016)
-\newblock Markov Chain Monte Carlo
-\newblock \emph{Introduction to Stochastic Processes With R}, Chapter 5, 181 -- 222.
+\bibitem[Moon, 2005]{p1} Todd K. Moon (2005)
+\newblock Chapter 12: Convolutional Codes
+\newblock \emph{Error Correction Coding: Mathematical Methods and Algorithms}, 452 -- 525.
 
 \end{thebibliography}
 }
