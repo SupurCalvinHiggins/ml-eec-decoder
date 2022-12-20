@@ -581,8 +581,8 @@ University of Rhode Island %\\ % Your institution for the title page
 %----------------------------------------------------------------------------------------
 
 \begin{frame}
-\frametitle{Overview} % Table of contents slide, comment this block out to remove it
-\tableofcontents % Throughout your presentation, if you choose to use \section{} and \subsection{} commands, these will automatically be printed on this slide as an overview of your presentation
+\frametitle{Overview} 
+\tableofcontents 
 \end{frame}
 
 %----------------------------------------------------------------------------------------
@@ -590,23 +590,95 @@ University of Rhode Island %\\ % Your institution for the title page
 %----------------------------------------------------------------------------------------
 
 %------------------------------------------------
-\section{Goal and Motivation} 
+\section{Background} 
 %------------------------------------------------
 
-\begin{frame}{Goal and Motivation}
+%------------------------------------------------
+\subsection{Convolutional Codes} 
+%------------------------------------------------
 
+\begin{frame}{Convolutional Codes}
+
+This encoder depicted in the figure below corresponds to the following \textbf{generator polynomials}:
+
+\begin{equation}
+\begin{aligned}
+g^{(1)}=1+x^2 \quad \quad & g^{(2)}=1+x+x^2  \\
+g^{(1)}=[1, 0, 1] \quad \quad & g^{(2)}=[1, 1, 1]
+\end{aligned}
+\end{equation}
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.15]{conv_code.png}
+\caption{Convolutional encoder with rate $R=\frac{1}{2}$ and constraint length $K=2$}
+\end{figure}
+
+%Each transition shown as a red arrow in the figure tells us another one of the original information-bearing bits (shown as a single bit along each arrow). The decoder maintains several possible paths and their accumulated errors in case errors occur. To avoid keeping all 2ᴺ possible paths for an N bits long sequence, only the more likely ones are maintained, while less likely ones are discarded along the way.
+
+% decision depth ?
 
 \end{frame}
 
 %------------------------------------------------
-\section{Background} 
+\subsection{Representations of the Encoding Process} 
 %------------------------------------------------
+
+\begin{frame}{Finite State Machine}
+
+Other representations of this encoder are a \textbf{finite state machine} and a \textbf{trellis}. 
+
+\begin{columns}
+\begin{column}{0.4\textwidth}
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.18]{fsm.png}
+\caption{FSM representation}
+\end{figure}
+
+% depicted as a directed graph with $2^L$ vertices as the possible states and $2^k$ edges as the possible transitions given $k$ input bits. 
+
+\end{column}
+\begin{column}{0.6\textwidth}
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.2]{trellis.png}
+\caption{Trellis representation}
+\end{figure}
+
+\end{column}
+\end{columns}
+
+The single digit on each edge indicates the input bit and the two digits indicates the output according to the generator polynomials.
+
+\end{frame}
 
 %------------------------------------------------
 \subsection{The Viterbi Decoder} 
 %------------------------------------------------
 
 \begin{frame}{The Viterbi Decoder}
+
+\begin{block}{Goal}
+Determine the \textbf{most likely} sequence of states that could have produced the given sequence of received bits
+\end{block}
+
+Using the trellis representation of the encoding process, the Viterbi decoder determines the \textbf{most likely path} along this trellis.
+
+\begin{figure}[h]
+\includegraphics[scale=0.2]{viterbi.png}
+\caption{A possible path along the trellis}
+\end{figure}
+
+\end{frame}
+
+%------------------------------------------------
+\section{Goal and Motivation} 
+%------------------------------------------------
+
+\begin{frame}{Goal and Motivation}
 
 
 \end{frame}
