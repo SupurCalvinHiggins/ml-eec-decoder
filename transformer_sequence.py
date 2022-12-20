@@ -48,7 +48,7 @@ class TransformerSequence(tf.keras.utils.Sequence):
         Returns:
             The number of batches in the dataset.
         """
-        return self._batch_size
+        return self._batch_count
 
     def __getitem__(self, idx: int) -> tuple[np.ndarray, np.ndarray]:
         """Gets a batch from the sequence.
