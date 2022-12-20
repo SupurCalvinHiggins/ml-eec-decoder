@@ -640,10 +640,6 @@ g^{(1)}=[1, 0, 1] \quad \quad & g^{(2)}=[1, 1, 1]
 \caption{Convolutional encoder with rate $R=\frac{1}{2}$ and constraint length $K=2$}
 \end{figure}
 
-%Each transition shown as a red arrow in the figure tells us another one of the original information-bearing bits (shown as a single bit along each arrow). The decoder maintains several possible paths and their accumulated errors in case errors occur. To avoid keeping all 2ᴺ possible paths for an N bits long sequence, only the more likely ones are maintained, while less likely ones are discarded along the way.
-
-% decision depth ?
-
 \end{frame}
 
 %------------------------------------------------
@@ -677,7 +673,7 @@ Other representations of this encoder are a \textbf{finite state machine} and a 
 \end{column}
 \end{columns}
 
-The single digit on each edge indicates the input bit and the two digits indicates the output according to the generator polynomials.
+The single digit on each edge indicates the input bit and the two digits indicate the output according to the generator polynomials.
 
 \end{frame}
 
@@ -698,6 +694,11 @@ Using the trellis representation of the encoding process, the Viterbi decoder de
 \caption{A possible path along the trellis}
 \end{figure}
 
+
+%Each transition shown as a red arrow in the figure tells us another one of the original information-bearing bits (shown as a single bit along each arrow). The decoder maintains several possible paths and their accumulated errors in case errors occur. To avoid keeping all 2ᴺ possible paths for an N bits long sequence, only the more likely ones are maintained, while less likely ones are discarded along the way.
+
+% decision depth ?
+
 % for the sake of time, do not go into details 
 % just mention this is "optimal" bc it is the most likely path (aka the path closest to what we observed - minimizing DISTANCE)
 % shortest distance paths on DAGs are best solved by dynamic programming bc of memoization of "most likely path up to now" / "smallest distance path up to now"
@@ -716,10 +717,16 @@ In 1996, Wang and Wicker determined that artificial neural networks with hand-pi
 
 \begin{block}{Our Goal}
 \begin{enumerate}
-\item Emulate a convolutional code decoder using neural networks in an attempt to \textbf{learn} this decoder in a data-driven manner. 
+\item Implement a convolutional code decoder using neural networks in an attempt to \textbf{learn} this decoder in a data-driven manner. 
 \item Compare its reliability against that of the Viterbi algorithm.
 \end{enumerate}
 \end{block}
+
+\textbf{Note:} This algorithm relies heavily on assumptions of the channel. However, practical channels will most likely break the fundamental assumption behind the algorithm. 
+
+\medskip
+
+On such channels, the Viterbi algorithm is suboptimal, giving an opportunity for a neural network to have better performance.
 
 \end{frame}
 
