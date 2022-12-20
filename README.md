@@ -2,15 +2,15 @@
 
 ## Necessary packages
 
-This project relies on the scikit-dsp-comm package. The documentation for the package can be found [here](https://scikit-dsp-comm.readthedocs.io/en/latest/index.html). 
+This project relies on a patched version of the scikit-dsp-comm package. The documentation for the package can be found [here](https://scikit-dsp-comm.readthedocs.io/en/latest/index.html). 
 
-In order to run the project, you will need to install this package. Instructions can be found [here](https://scikit-dsp-comm.readthedocs.io/en/latest/readme.html#getting-set-up-on-your-system). The developers recommend the following:
+In order to run the project, you will need to install the patched package by doing the following:
 
 1. Navigate to the project directory and clone the package repository here.
 
 ```bash
 cd <project directory>
-git clone https://github.com/mwickert/scikit-dsp-comm.git
+git clone https://github.com/SupurCalvinHiggins/scikit-dsp-comm.git
 ```
 
 2. Rename the new directory to use '_' instead of '-'. 
