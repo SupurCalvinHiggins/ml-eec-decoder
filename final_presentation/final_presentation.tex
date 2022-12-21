@@ -594,88 +594,118 @@ University of Rhode Island %\\ % Your institution for the title page
 %------------------------------------------------
 
 %------------------------------------------------
+\subsection{Error Correcting Codes} 
+%------------------------------------------------
+
+\begin{frame}{Error Correcting Codes}
+
+In modern digital communications, error control coding is nearly ubiquitous, from CDs, flash drives, phone calls, TV, and anything transmitted over the internet.
+
+\medskip
+
+\begin{block}{Definition}
+\textbf{Channels} are the medium through which data is transmitted between devices. Channels can introduce errors into the data during transmission.
+
+\end{block}
+
+\medskip
+
+\begin{block}{Definition}
+\textbf{Error correcting codes} add redundancy to data prior to transmission to ensure that errors can be corrected based on the received data. 
+
+\end{block}
+
+\end{frame}
+
+%------------------------------------------------
 \subsection{Convolutional Encoding} 
 %------------------------------------------------
 
 \begin{frame}{Convolutional Codes}
 
 %Introduced in 1955 by Peter Elias, 
-Convolutional codes are a powerful method of encoding messages, by using short memory and convolution operators to sequentially create coded bits. 
+\textbf{Convolutional codes} are a powerful class of error correcting codes that use short memory and convolution operators to sequentially create coded bits. 
 
 \medskip
 
-\begin{block}{Definition}
-A \textbf{linear shift register (LSR)} is a shift register whose input bit is a linear function of its previous state.
-
-\smallskip
-
-The most commonly used linear function of single bits XOR.
-\end{block}
-
-\medskip
-
-A convolutional encoder utilizes linear shift registers to encode $k$ input bits into $n$ output bits, thus yielding a code of \textbf{rate} $R=\frac{k}{n}$. Each output bit depends on the previous $L$ input bits, where $L$ is called the \textbf{constraint length}.
-
-\end{frame}
-
-%------------------------------------------------
-
-\begin{frame}{Convolutional Encoding}
-
-This encoder depicted in the figure below corresponds to the following \textbf{generator polynomials}:
-
-\begin{equation}
-\begin{aligned}
-g^{(1)}=1+x^2 \quad \quad & g^{(2)}=1+x+x^2  \\
-g^{(1)}=[1, 0, 1] \quad \quad & g^{(2)}=[1, 1, 1]
-\end{aligned}
-\end{equation}
-
-% power of the term = "n-th" previous bit
-% addition is addition modulo 2 (equivalently XOR)
-
 \begin{figure}[h]
 \centering
-\includegraphics[scale=0.15]{conv_code.png}
-\caption{Convolutional encoder with rate $R=\frac{1}{2}$ and constraint length $K=2$}
-\end{figure}
-
-\end{frame}
-
-%------------------------------------------------
-\subsection{Representations of the Encoding Process} 
-%------------------------------------------------
-
-\begin{frame}{Finite State Machine}
-
-Other representations of this encoder are a \textbf{finite state machine} and a \textbf{trellis}. 
-
-\begin{columns}
-\begin{column}{0.4\textwidth}
-
-\begin{figure}[h]
-\centering
-\includegraphics[scale=0.18]{fsm.png}
-\caption{FSM representation}
-\end{figure}
-
-% depicted as a directed graph with $2^L$ vertices as the possible states and $2^k$ edges as the possible transitions given $k$ input bits. 
-
-\end{column}
-\begin{column}{0.6\textwidth}
-
-\begin{figure}[h]
-\centering
-\includegraphics[scale=0.2]{trellis.png}
+\includegraphics[scale=0.25]{trellis.png}
 \caption{Trellis representation}
 \end{figure}
 
-\end{column}
-\end{columns}
+% \begin{block}{Definition}
+% A \textbf{linear shift register (LSR)} is a shift register whose input bit is a linear function of its previous state.
 
-The single digit on each edge indicates the input bit and the two digits indicate the output according to the generator polynomials.
+% \smallskip
+
+% The most commonly used linear function of single bits XOR.
+% \end{block}
+
+% \medskip
+
+% A convolutional encoder utilizes linear shift registers to encode $k$ input bits into $n$ output bits, thus yielding a code of \textbf{rate} $R=\frac{k}{n}$. Each output bit depends on the previous $L$ input bits, where $L$ is called the \textbf{constraint length}.
 
 \end{frame}
+
+% %------------------------------------------------
+
+% \begin{frame}{Convolutional Encoding}
+
+% This encoder depicted in the figure below corresponds to the following \textbf{generator polynomials}:
+
+% \begin{equation}
+% \begin{aligned}
+% g^{(1)}=1+x^2 \quad \quad & g^{(2)}=1+x+x^2  \\
+% g^{(1)}=[1, 0, 1] \quad \quad & g^{(2)}=[1, 1, 1]
+% \end{aligned}
+% \end{equation}
+
+% % power of the term = "n-th" previous bit
+% % addition is addition modulo 2 (equivalently XOR)
+
+% \begin{figure}[h]
+% \centering
+% \includegraphics[scale=0.15]{conv_code.png}
+% \caption{Convolutional encoder with rate $R=\frac{1}{2}$ and constraint length $K=2$}
+% \end{figure}
+
+% \end{frame}
+
+% %------------------------------------------------
+% \subsection{Representations of the Encoding Process} 
+% %------------------------------------------------
+
+% \begin{frame}{Finite State Machine}
+
+% Other representations of this encoder are a \textbf{finite state machine} and a \textbf{trellis}. 
+
+% \begin{columns}
+% \begin{column}{0.4\textwidth}
+
+% \begin{figure}[h]
+% \centering
+% \includegraphics[scale=0.18]{fsm.png}
+% \caption{FSM representation}
+% \end{figure}
+
+% % depicted as a directed graph with $2^L$ vertices as the possible states and $2^k$ edges as the possible transitions given $k$ input bits. 
+
+% \end{column}
+% \begin{column}{0.6\textwidth}
+
+% \begin{figure}[h]
+% \centering
+% \includegraphics[scale=0.2]{trellis.png}
+% \caption{Trellis representation}
+% \end{figure}
+
+% \end{column}
+% \end{columns}
+
+% The single digit on each edge indicates the input bit and the two digits indicate the output according to the generator polynomials.
+
+% \end{frame}
 
 %------------------------------------------------
 \subsection{The Viterbi Decoder} 
@@ -731,71 +761,90 @@ On such channels, the Viterbi algorithm is suboptimal, giving an opportunity for
 \end{frame}
 
 %------------------------------------------------
-\section{Tools} 
+\section{Building Our Model} 
 %------------------------------------------------
 
 %------------------------------------------------
-\subsection{scikit-dsp-comm} 
+\subsection{Recurrent Neural Networks} 
 %------------------------------------------------
 
-\begin{frame}{scikit-dsp-comm}
+\begin{frame}{Recurrent Neural Networks}
 
-%Since the Viterbi decoder is optimal, we wanted to use this algorithm to compare against our own model.
-
-%\medskip
-\begin{columns}
-\begin{column}{0.47\textwidth}
-The \href{https://scikit-dsp-comm.readthedocs.io/en/latest/}{scikit-dsp-comm} package ``is a collection of functions and classes to support signal processing and communications theory teaching and research."
+We want to map encoded data (potentially with errors) to decoded data. This is called a \textbf{sequence-to-sequence} problem.
 
 \medskip
 
-Due to some discrepancies between our model and the Viterbi decoder from the package, a \href{https://github.com/SupurCalvinHiggins/scikit-dsp-comm.git}{patch} was created to ensure both outputs were comparable. 
-
-\end{column}
-\begin{column}{0.47\textwidth}
 \begin{figure}[h]
-\includegraphics[scale=0.28]{scikit-dsp-comm-logo.png}
-\end{figure}
-\end{column}
-\end{columns}
-\end{frame}
-
-%------------------------------------------------
-\subsection{Tensorflow with Keras} 
-%------------------------------------------------
-
-\begin{frame}{Tensorflow with Keras} 
-\begin{columns}
-\begin{column}{0.47\textwidth}
-The \href{https://keras.io/about/}{Keras package} is a high-level wrapper over Tensorflow 2 for implementing neural networks.
+\includegraphics[scale=0.7]{rnn.png}
+\end{figure}.
 
 \medskip
 
-We used Keras to implement both our models and our training pipeline. In particular, we made extensive use of the LSTM layer for the model implementation and the Keras Sequence API for dataset generation.
+\textbf{Recurrent neural networks} (RNNs) are a type of neural network equipped with ``memory" that enables them to learn from sequential data. RNNs excell at sequence-to-sequence problems!
 
-\end{column}
-\begin{column}{0.47\textwidth}
 
-\begin{figure}[h]
-\includegraphics[scale=0.08]{keras.png}
-\includegraphics[scale=0.2]{tensorflow.png}
-\end{figure}
 
-\end{column}
-\end{columns}
+
+
+%RNNs can remember its previous inputs but Standard Neural Networks are not capable of remembering previous inputs. RNN takes historical information for computation.
+
+
 \end{frame}
 
 %------------------------------------------------
-\section{Our Model} 
+\subsection{LSTMs} 
+%------------------------------------------------
+
+\begin{frame}{LSTMs} 
+
+\textbf{LSTMs} are powerful RNN variant with longer term memory. Practically speaking, they are a drop-in replacement with a lot of kick!
+
+\begin{figure}[h]
+\includegraphics[scale=0.6]{lstm.png}
+\end{figure}
+
+\end{frame}
+
+%------------------------------------------------
+\subsection{Our Model} 
 %------------------------------------------------
 
 \begin{frame}{Our Model} 
 
-Our model consisted of 4 stacked layers of Bidirectional-Long Short-Term Memories (LSTMs) with 64 units per layer and the $\tanh$ activation function and an output layer being a single time distributed neuron with the sigmoid activation function. 
+%Our model consisted of 4 stacked layers of Bidirectional-Long Short-Term Memories (LSTMs) with 64 units per layer and the $\tanh$ activation function and an output layer being a single time distributed neuron with the sigmoid activation function. 
 
-\smallskip
+\begin{figure}[h]
+\includegraphics[scale=0.4]{our_model.png}
+\caption{The Structure of Our Model}
+\end{figure}
 
-Training the Models:
+\end{frame}
+
+%------------------------------------------------
+\subsection{Data and Baseline} 
+%------------------------------------------------
+
+\begin{frame}{Data and Baseline} 
+
+We generated our own dataset by emulating the process of encoding, transmitting and decoding bit sequences. 
+
+\medskip
+
+We generated bit strings of length 64 and pushed each through a convolutional encoder and "transmitted" them through a simulated channel. This channel introduced burst errors of a certain length with probability 0.04.
+
+\medskip
+
+In order to have a baseline to analyze the performance of our model, we also ran an implementation of the Viterbi decoder to provide a concrete comparison to our model.
+
+\end{frame}
+
+%------------------------------------------------
+\subsection{Training} 
+%------------------------------------------------
+
+\begin{frame}{Training} 
+
+When training the models:
 
 \begin{itemize}
 \item For each burst length in the range [1, 31], we trained a separate model with a Nadam optimizer with an initial learning rate of 0.001, $\beta_1=0.9$ and $\beta_2=0.999$.
@@ -811,7 +860,7 @@ Training the Models:
 \end{frame}
 
 %------------------------------------------------
-\section{Comparison Against the Viterbi Decoder} 
+\section{Comparison Against the Viterbi Decoder} % testing?
 %------------------------------------------------
 
 \begin{frame}{Comparison Against the Viterbi Decoder}
@@ -859,7 +908,7 @@ In the following graph, the average Hamming distance for each burst length is pl
 
 \setbeamertemplate{bibliography item}[online]
 \bibitem[Mazal, 2021]{p1} Yair Mazal (2021)
-\newblock Intro to Convolutional Coding — Part I & Part II
+\newblock Intro to Convolutional Coding — Part I \& Part II
 \newblock \emph{Medium - Nerd for Tech} https://medium.com/nerd-for-tech/into-to-convolutional-coding-part-i-d63decab56a0
 
 \setbeamertemplate{bibliography item}[online]
