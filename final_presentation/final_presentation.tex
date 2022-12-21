@@ -828,14 +828,23 @@ The following graph was produced comparing the Hamming distance between each ori
 \end{frame}
 
 %------------------------------------------------
+\subsection{Results} 
+%------------------------------------------------
 
-\begin{frame}{Comparison Against the Viterbi Decoder}
+\begin{frame}{Results}
 
 In the following graph, the average Hamming distance for each burst length is plotted as a single point and the error bars represent values within one standard deviation. 
 
 \begin{figure}[h]
 \includegraphics[scale=0.5]{results_graph.png}
 \end{figure}
+
+%A two-sample one-tailed t-test with unequal variances was performed for each burst length, comparing the Viterbi baseline with our model.
+%
+%\medskip
+%
+%For each burst length, the corresponding p-value was less than $\alpha = 0.05$, meaning our model outperforms the Viterbi decoder with a statistical significance.
+
 
 \end{frame}
 
