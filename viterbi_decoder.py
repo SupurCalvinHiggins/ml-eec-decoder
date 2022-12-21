@@ -2,6 +2,7 @@ import numpy as np
 from sk_dsp_comm import fec_conv
 
 
+
 class ViterbiDecoder:
     def __init__(self, transfer_matrix: list[list[int]]) -> None:
         # convert transfer_matrix list[list[int]] into package format tuple(string)
