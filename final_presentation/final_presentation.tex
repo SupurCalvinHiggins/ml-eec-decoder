@@ -761,24 +761,82 @@ Due to some discrepancies between our model and the Viterbi decoder from the pac
 \end{frame}
 
 %------------------------------------------------
+\subsection{Tensorflow with Keras} 
+%------------------------------------------------
+
+\begin{frame}{Tensorflow with Keras} 
+\begin{columns}
+\begin{column}{0.47\textwidth}
+The \href{https://keras.io/about/}{Keras package} is a high-level wrapper over Tensorflow 2 for implementing neural networks.
+
+\medskip
+
+We used Keras to implement both our models and our training pipeline. In particular, we made extensive use of the LSTM layer for the model implementation and the Keras Sequence API for dataset generation.
+
+\end{column}
+\begin{column}{0.47\textwidth}
+
+\begin{figure}[h]
+\includegraphics[scale=0.08]{keras.png}
+\includegraphics[scale=0.2]{tensorflow.png}
+\end{figure}
+
+\end{column}
+\end{columns}
+\end{frame}
+
+%------------------------------------------------
 \section{Our Model} 
 %------------------------------------------------
 
-%------------------------------------------------
-\subsection{RNN (?)} 
-%------------------------------------------------
+\begin{frame}
 
-\begin{frame}{RNN (?)}
 
+Our model consisted of 4 stacked layers of Bidirectional-Long Short-Term Memories (LSTMs) with 64 units per layer and the $\tanh$ activation function and an output layer being a single time distributed neuron with the sigmoid activation function. 
+
+\smallskip
+
+Training the Models:
+
+\begin{itemize}
+\item For each burst length in the range [1, 31], we trained a separate model with a Nadam optimizer with an initial learning rate of 0.001, $\beta_1=0.9$ and $\beta_2=0.999$.
+
+\item We used the MSE loss function.
+
+\item When the loss did not improve for more than 5 epochs, the learning rate was reduced by a factor of 10.
+
+\item If the loss did not improve for more than 10 epochs, training was halted and the model with the lowest achieved loss was selected. 
+
+\end{itemize}
 
 \end{frame}
 
 %------------------------------------------------
-\section{Results} 
+\section{Comparison Against the Viterbi Decoder} 
 %------------------------------------------------
 
-\begin{frame}{Results}
+\begin{frame}{Comparison Against the Viterbi Decoder}
 
+We evaluated each final model on 2048 new samples to generate final loss and Hamming distance metrics. 
+
+\medskip
+
+Additionally, we evaluated a Viterbi decoder with a decision depth of 15 and AWGN assumptions on the same samples to serve as a baseline.
+
+\medskip
+
+The following graph was produced comparing the Hamming distance between each original sequence and what the model and Viterbi decoder predicted for that sequence.
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Comparison Against the Viterbi Decoder}
+
+In the following graph, the average Hamming distance for each burst length is plotted as a single point and the error bars represent values within one standard deviation. 
+
+\begin{figure}[h]
+\includegraphics[scale=0.5]{results_graph.png}
+\end{figure}
 
 \end{frame}
 
