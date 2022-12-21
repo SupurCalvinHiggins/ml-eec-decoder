@@ -56,3 +56,7 @@ class FeedForwardEncoder:
             input_data[0] = 0
 
         return output_data
+
+    @property
+    def pad_count(self) -> int:
+        return self._transfer_matrix_degree
