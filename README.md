@@ -44,7 +44,7 @@ pip install -e .
 
 After executed the commands, the modified version of the package should be installed. The motivation behind the modified package is provided below.
 
-The decoder in the default scikit-dsp-comm package is a ``streaming" convolutional code decoder. That is, the decoder assumes that a continuous stream of symbols will be received and will wait to decode symbols until a certain number of subsequent symbols have been received. This prevents establishing baseline performance metrics because the decoder will refuse to decode the entire message. The modified version of the scikit-dsp-comm package ensures that the decoder will finish decoding the entire message.
+The decoder in the default scikit-dsp-comm package is a "streaming" convolutional code decoder. That is, the decoder assumes that a continuous stream of symbols will be received and will wait to decode symbols until a certain number of subsequent symbols have been received. This prevents establishing baseline performance metrics because the decoder will refuse to decode the entire message. The modified version of the scikit-dsp-comm package ensures that the decoder will finish decoding the entire message.
 
 ## Testing
 
