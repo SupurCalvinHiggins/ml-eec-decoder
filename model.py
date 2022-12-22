@@ -1,18 +1,15 @@
 import os
 import datetime
 import numpy as np
-
-
 from keras.models import Sequential
 from keras.layers import LSTM, Dense, TimeDistributed, Input, Bidirectional
 from keras.callbacks import ReduceLROnPlateau, EarlyStopping
-
-
 from conv_codes import FeedForwardEncoder, FeedForwardDecoder
 from channels import BurstyBinarySymmetricChannel
 from transformer_sequence import TransformerSequence
 
 
+# Encoder and channel constants.
 TRANSFER_MATRIX = [[1, 1, 1], [1, 0, 1]]
 CROSSOVER_PROBABILITY = 0.04
 DATA_SYMBOL_COUNT = 64 - (len(TRANSFER_MATRIX[0]) - 1)
@@ -42,7 +39,7 @@ def build_model() -> Sequential:
     return model
 
 
-def approximate_baseline_loss(sequence: TransformerSequence) -> float:
+def baseline_loss_estimate(sequence: TransformerSequence) -> float:
     total_error = 0
     for i in range(len(sequence)):
         X_batch, y_batch = sequence[i]
@@ -50,7 +47,7 @@ def approximate_baseline_loss(sequence: TransformerSequence) -> float:
             decoder = FeedForwardDecoder(TRANSFER_MATRIX)
             X_sample = X_batch[j].flatten()
             y_sample = y_batch[j].flatten()
-            y_baseline = decoder.decode(X_sample)
+            y_baseline = decoder.transform(X_sample)
             y_baseline[-2:] = 0
             norm = (
                 (y_sample.astype(np.uint8) ^ y_baseline.astype(np.uint8)) ** 2
@@ -63,6 +60,87 @@ def approximate_baseline_loss(sequence: TransformerSequence) -> float:
     return total_error / samples
 
 
+def train_models(output_directory: str) -> None:
+    for burst_length in range(1, 32):
+
+        # Generate a new dataset for the burst length.
+        sequence = build_sequence(burst_length)
+
+        # Compute and display an estimate of the baseline loss.
+        baseline_loss = baseline_loss_estimate(sequence)
+        print("*" * 100)
+        print(f"Baseline loss: {baseline_loss}")
+        print("*" * 100)
+
+        # Display the model.
+        model = build_model()
+        model.summary()
+
+        # Set up callbacks.
+        early_stopping = EarlyStopping(
+            monitor="loss",
+            patience=10,
+            restore_best_weights=True,
+        )
+        reduce_lr = ReduceLROnPlateau(monitor="loss", patience=5)
+
+        # Train the model.
+        model.fit(
+            sequence,
+            epochs=1,
+            callbacks=[reduce_lr, early_stopping],
+            verbose=1,
+        )
+
+        # Save the model.
+        model_name = f"model_l{burst_length}.h5"
+        model_path = os.path.join(output_directory, model_name)
+        model.save(model_path)
+
+        # Compute and display an estimate of the model loss.
+        results = model.evaluate(sequence, verbose=1)
+        print("*" * 100)
+        print(f"Evaluate loss: {results}")
+        print("*" * 100)
+
+        # Compute and save model and baseline mean and std Hamming distance.
+        print("Testing model...")
+        baseline_norms = []
+        model_norms = []
+        for _ in range(2):
+            sequence.on_epoch_end()
+            for i in range(len(sequence)):
+                X_batch, y_batch = sequence[i]
+                for j in range(X_batch.shape[0]):
+                    decoder = FeedForwardDecoder(TRANSFER_MATRIX)
+                    X_sample = X_batch[j].flatten()
+                    y_sample = y_batch[j].flatten()
+                    y_baseline = decoder.transform(X_sample)
+                    y_model = model.predict(X_batch[j][np.newaxis, :])
+                    y_baseline[-2:] = 0
+                    baseline_norm = (
+                        (y_sample.astype(np.uint8) ^ y_baseline.astype(np.uint8)) ** 2
+                    ).sum()
+                    baseline_norms.append(baseline_norm)
+                    model_norm = (
+                        (
+                            y_sample.astype(np.uint8)
+                            ^ np.around(y_model[0].flatten()).astype(np.uint8)
+                        )
+                        ** 2
+                    ).sum()
+                    model_norms.append(model_norm)
+                print(f"Batch {i}/{len(sequence)}")
+
+        csv_path = os.path.join(output_directory, "out.csv")
+        with open(csv_path, "a") as f:
+            f.writelines(
+                [
+                    f"{burst_length},{np.mean(baseline_norms)},{np.std(baseline_norms)},{np.mean(model_norms)},{np.std(model_norms)}\n"
+                ]
+            )
+
+
 def main() -> None:
 
     # Create the output directory.
@@ -73,36 +151,8 @@ def main() -> None:
     )
     os.makedirs(output_directory)
 
-    for burst_length in range(1, 32):
-        sequence = build_sequence(burst_length)
-
-        baseline_loss = approximate_baseline_loss(sequence)
-        print("*" * 100)
-        print(f"Approximate baseline loss: {baseline_loss}")
-        print("*" * 100)
-
-        model = build_model()
-        model.summary()
-
-        early_stopping = EarlyStopping(
-            monitor="loss",
-            patience=10,
-            restore_best_weights=True,
-        )
-        reduce_lr = ReduceLROnPlateau(monitor="loss", patience=5)
-        model.fit(
-            sequence,
-            epochs=1000,
-            callbacks=[reduce_lr, early_stopping],
-            verbose=1,
-        )
-        model_name = f"model_l{burst_length}.h5"
-        model_path = os.path.join(output_directory, model_name)
-        model.save(model_path)
-        results = model.evaluate(sequence, verbose=1)
-        print("*" * 100)
-        print(f"Evaluate loss: {results}")
-        print("*" * 100)
+    # Train the models.
+    train_models(output_directory)
 
 
 if __name__ == "__main__":

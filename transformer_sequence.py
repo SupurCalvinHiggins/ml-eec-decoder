@@ -8,7 +8,6 @@ class TransformerSequence(tf.keras.utils.Sequence):
         encoder: object,
         channel: object,
         batch_shape: tuple[int, int, int, int],
-        pad_count: int,
     ) -> None:
         """Constructs a Sequence dataset yielding batches of data in the shape of
         batch_shape. Uniform random labels are generated in the shape of

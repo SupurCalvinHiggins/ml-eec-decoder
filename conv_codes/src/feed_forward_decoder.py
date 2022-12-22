@@ -12,7 +12,7 @@ class FeedForwardDecoder:
         self._polys = polys
         self._decision_depth = len(transfer_matrix[0]) * 5
 
-    def decode(self, data: np.ndarray) -> np.ndarray:
+    def transform(self, data: np.ndarray) -> np.ndarray:
         # call decoder from imported package
         data = data.astype(np.uint8)
         decoder = fec_conv.FECConv(self._polys, Depth=self._decision_depth)
