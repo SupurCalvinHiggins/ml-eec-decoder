@@ -10,7 +10,7 @@ from keras.layers import (
     MaxPooling1D,
     Bidirectional,
 )
-from feed_forward_encoder import FeedForwardEncoder
+from conv_codes import FeedForwardEncoder
 from channels.binary_symmetric_channel import BinarySymmetricChannel
 
 

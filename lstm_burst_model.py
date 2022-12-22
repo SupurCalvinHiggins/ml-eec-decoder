@@ -1,7 +1,7 @@
 from keras.models import Sequential, load_model
 from keras.layers import LSTM, Dense, TimeDistributed, Input, Bidirectional
 from keras.callbacks import ReduceLROnPlateau, EarlyStopping
-from feed_forward_encoder import FeedForwardEncoder
+from conv_codes import FeedForwardEncoder
 from channels import BurstyBinarySymmetricChannel
 from transformer_pipeline import TransformerPipeline
 from transformer_sequence import TransformerSequence

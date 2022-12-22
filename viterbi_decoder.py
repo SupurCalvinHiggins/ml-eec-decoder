@@ -2,7 +2,6 @@ import numpy as np
 from sk_dsp_comm import fec_conv
 
 
-
 class ViterbiDecoder:
     def __init__(self, transfer_matrix: list[list[int]]) -> None:
         # convert transfer_matrix list[list[int]] into package format tuple(string)
@@ -19,7 +18,7 @@ class ViterbiDecoder:
 
 
 if __name__ == "__main__":
-    from feed_forward_encoder import FeedForwardEncoder
+    from conv_codes import FeedForwardEncoder
 
     en = FeedForwardEncoder([[1, 1, 1], [1, 0, 1]])
     data = np.random.choice((0, 1), size=64)

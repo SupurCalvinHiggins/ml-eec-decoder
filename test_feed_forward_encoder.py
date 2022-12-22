@@ -1,5 +1,5 @@
 import numpy as np
-from feed_forward_encoder import FeedForwardEncoder
+from conv_codes import FeedForwardEncoder
 
 
 def test_feedforward_encoder_1() -> None:

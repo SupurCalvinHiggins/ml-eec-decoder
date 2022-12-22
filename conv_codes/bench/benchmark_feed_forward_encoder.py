@@ -1,6 +1,6 @@
 import time
 import numpy as np
-from feed_forward_encoder import FeedForwardEncoder
+from conv_codes import FeedForwardEncoder
 
 
 BENCHMARK_SIZE = 10_000_000
