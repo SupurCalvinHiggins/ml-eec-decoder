@@ -1,13 +1,16 @@
-from keras.models import Sequential, load_model
+import os
+import datetime
+import numpy as np
+
+
+from keras.models import Sequential
 from keras.layers import LSTM, Dense, TimeDistributed, Input, Bidirectional
 from keras.callbacks import ReduceLROnPlateau, EarlyStopping
-from conv_codes import FeedForwardEncoder
+
+
+from conv_codes import FeedForwardEncoder, FeedForwardDecoder
 from channels import BurstyBinarySymmetricChannel
 from transformer_sequence import TransformerSequence
-from conv_codes import FeedForwardDecoder
-import numpy as np
-import os
-import csv
 
 
 TRANSFER_MATRIX = [[1, 1, 1], [1, 0, 1]]
@@ -61,6 +64,15 @@ def approximate_baseline_loss(sequence: TransformerSequence) -> float:
 
 
 def main() -> None:
+
+    # Create the output directory.
+    now = datetime.datetime.now()
+    output_directory = os.path.join(
+        "models",
+        now.strftime("%Y-%m-%d_%H-%M-%S"),
+    )
+    os.makedirs(output_directory)
+
     for burst_length in range(1, 32):
         sequence = build_sequence(burst_length)
 
@@ -84,25 +96,13 @@ def main() -> None:
             callbacks=[reduce_lr, early_stopping],
             verbose=1,
         )
-        model_path = os.path.join(
-            "lstm_burst_model_output", f"burst_length_{burst_length}.h5"
-        )
+        model_name = f"model_l{burst_length}.h5"
+        model_path = os.path.join(output_directory, model_name)
         model.save(model_path)
         results = model.evaluate(sequence, verbose=1)
         print("*" * 100)
         print(f"Evaluate loss: {results}")
         print("*" * 100)
-
-        csv_path = os.path.join("lstm_burst_model_output", "out.csv")
-        with open(csv_path, "a") as f:
-            f.writelines([f"{burst_length},{baseline_loss},{results}\n"])
-
-
-# 4 stacked lstm units=64 layers
-# crossover 0.1, batchsize/count = 32,32
-# converged after 70 epoch to loss 0.17 mse
-# w/ transfer_matrix=[[1, 1, 0], [1, 0, 1]]
-# high error floor because complete symbol flip is likely
 
 
 if __name__ == "__main__":
