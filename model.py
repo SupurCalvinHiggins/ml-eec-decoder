@@ -11,7 +11,7 @@ from keras.layers import (
     Bidirectional,
 )
 from conv_codes import FeedForwardEncoder
-from channels.binary_symmetric_channel import BinarySymmetricChannel
+from channels import BinarySymmetricChannel
 
 
 # model.add(Conv1D(filters=10, kernel_size=2, activation="relu"))
