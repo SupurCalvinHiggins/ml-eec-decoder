@@ -4,7 +4,7 @@ from keras.callbacks import ReduceLROnPlateau, EarlyStopping
 from conv_codes import FeedForwardEncoder
 from channels import BurstyBinarySymmetricChannel
 from transformer_sequence import TransformerSequence
-from conv_codes import ViterbiDecoder
+from conv_codes import FeedForwardDecoder
 import numpy as np
 import os
 import csv
@@ -43,7 +43,7 @@ def main() -> None:
                 print(
                     f"{burst_length}: {i*X_batch.shape[0] + j}/{len(sequence) * X_batch.shape[0]}"
                 )
-                decoder = ViterbiDecoder(TRANSFER_MATRIX)
+                decoder = FeedForwardDecoder(TRANSFER_MATRIX)
                 X_sample = X_batch[j].flatten()
                 y_sample = y_batch[j].flatten()
                 y_baseline = decoder.decode(X_sample)

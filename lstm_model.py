@@ -4,7 +4,7 @@ from keras.callbacks import ReduceLROnPlateau
 from conv_codes import FeedForwardEncoder
 from channels import BinarySymmetricChannel, BurstyBinarySymmetricChannel
 from transformer_sequence import TransformerSequence
-from conv_codes import ViterbiDecoder
+from conv_codes import FeedForwardDecoder
 import numpy as np
 
 
@@ -45,7 +45,7 @@ def approximate_baseline_loss(sequence: TransformerSequence) -> float:
     for i in range(len(sequence)):
         X_batch, y_batch = sequence[i]
         for j in range(X_batch.shape[0]):
-            decoder = ViterbiDecoder(TRANSFER_MATRIX)
+            decoder = FeedForwardDecoder(TRANSFER_MATRIX)
             X_sample = X_batch[j].flatten()
             y_sample = y_batch[j].flatten()
             y_baseline = decoder.decode(X_sample)

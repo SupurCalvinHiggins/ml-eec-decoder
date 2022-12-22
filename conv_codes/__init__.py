@@ -1,5 +1,5 @@
 from .src.feed_forward_encoder import FeedForwardEncoder
-from .src.viterbi_decoder import ViterbiDecoder
+from .src.feed_forward_decoder import FeedForwardDecoder
 
 
-__all__ = ("FeedForwardEncoder", "ViterbiDecoder")
+__all__ = ("FeedForwardEncoder", "FeedForwardDecoder")
