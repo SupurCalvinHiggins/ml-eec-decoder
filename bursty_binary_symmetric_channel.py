@@ -30,7 +30,7 @@ class BurstyBinarySymmetricChannel:
                 The array of bits to introduce burst errors to. The behavior of this
                 method is undefined on arrays that contain elements other than 0 and 1.
 
-        Returns: The data with burst errors.
+        Return: The data with burst errors.
         """
 
         assert data.size > self._burst_length
