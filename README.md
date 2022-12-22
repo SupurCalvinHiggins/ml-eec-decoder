@@ -58,6 +58,8 @@ Navigate to the root directory of the project and execute the following commands
 pytest .
 ```
 
+A lack of errors does not indicate that the project is working properly. However, the presence of errors DOES indicate that project is NOT working properly. 
+
 ## Benchmarking
 
 This project has partial benchmark coverage. Benchmarks can be executed directly with Python.
