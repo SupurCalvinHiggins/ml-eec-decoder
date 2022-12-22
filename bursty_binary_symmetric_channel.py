@@ -16,7 +16,7 @@ class BurstyBinarySymmetricChannel:
                 from a particular location and continue for burst_length bits.
         """
 
-        assert 0 < burst_probability < 1
+        assert 0 <= burst_probability <= 1
         assert burst_length > 0
 
         self._distribution = [1 - burst_probability, burst_probability]
