@@ -33,6 +33,8 @@ class BurstyBinarySymmetricChannel:
         Returns: The data with burst errors.
         """
 
+        assert data.size > self._burst_length
+
         # Convert the data to the appropriate data type.
         data = data.astype(np.uint8, copy=False)
 
