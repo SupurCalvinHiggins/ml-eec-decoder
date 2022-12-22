@@ -1,25 +1,27 @@
 import numpy as np
 import tensorflow as tf
-from transformer_pipeline import TransformerPipeline
 
 
 class TransformerSequence(tf.keras.utils.Sequence):
     def __init__(
         self,
-        transformer: TransformerPipeline,
+        encoder: object,
+        channel: object,
         batch_shape: tuple[int, int, int, int],
         pad_count: int,
     ) -> None:
         """Constructs a Sequence dataset yielding batches of data in the shape of
         batch_shape. Uniform random labels are generated in the shape of
         (symbol_count - pad_count,). These labels are transformed by the
-        transformer to produce the dataset features. The transformer should be a
-        TransformerPipeline of an Encoder followed by a Channel. That is, the features
-        should be produced by encoding the random labels and introducing noise.
+        transformer to produce the dataset features. The features
+        should are produced by transforming the random labels with the encoder and then
+        the channel.
 
         Args:
-            transformer:
-                A TransformerPipeline of some Encoder followed by a Channel.
+            encoder:
+                A convolutional code encoder.
+            channel:
+                A channel from the channels package.
             batch_shape:
                 The shape of the batch in the format of
                 (batch_count, batch_size, symbol_count, symbol_size) where batch_count
@@ -30,7 +32,8 @@ class TransformerSequence(tf.keras.utils.Sequence):
             pad_count:
                 The number of pad symbols appended to the labels by the transformer.
         """
-        self._transformer = transformer
+        self._encoder = encoder
+        self._channel = channel
         (
             self._batch_count,
             self._batch_size,
@@ -84,5 +87,7 @@ class TransformerSequence(tf.keras.utils.Sequence):
             for j in range(self._batch_size):
                 y_sample = self._y[i, j, : self._symbol_count - self._pad_count]
                 X_sample_shape = (self._symbol_count, self._symbol_size)
-                X_sample = self._transformer.transform(y_sample).reshape(X_sample_shape)
-                self._X[i, j, :, :] = X_sample
+                X_sample_encoded = self._encoder.transform(y_sample)
+                X_sample_transmitted = self._channel.transform(X_sample_encoded)
+                X_sample_reshaped = X_sample_transmitted.reshape(X_sample_shape)
+                self._X[i, j, :, :] = X_sample_reshaped

@@ -3,7 +3,6 @@ from keras.layers import LSTM, Dense, TimeDistributed, Input, Bidirectional
 from keras.callbacks import ReduceLROnPlateau
 from conv_codes import FeedForwardEncoder
 from channels import BinarySymmetricChannel, BurstyBinarySymmetricChannel
-from transformer_pipeline import TransformerPipeline
 from transformer_sequence import TransformerSequence
 from viterbi_decoder import ViterbiDecoder
 import numpy as np
@@ -21,9 +20,9 @@ def build_sequence() -> TransformerSequence:
         CROSSOVER_PROBABILITY, 1
     )  # won at 9 with 0.04
     # channel = BinarySymmetricChannel(CROSSOVER_PROBABILITY)
-    pipeline = TransformerPipeline(transformers=[encoder, channel])
     sequence = TransformerSequence(
-        transformer=pipeline,
+        encoder=encoder,
+        channel=channel,
         batch_shape=(32, 32, DATA_SYMBOL_COUNT + encoder.pad_count, SYMBOL_SIZE),
         pad_count=encoder.pad_count,
     )
