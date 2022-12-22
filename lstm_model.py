@@ -4,7 +4,7 @@ from keras.callbacks import ReduceLROnPlateau
 from conv_codes import FeedForwardEncoder
 from channels import BinarySymmetricChannel, BurstyBinarySymmetricChannel
 from transformer_sequence import TransformerSequence
-from viterbi_decoder import ViterbiDecoder
+from conv_codes import ViterbiDecoder
 import numpy as np
 
 
