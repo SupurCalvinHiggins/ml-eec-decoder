@@ -1,5 +1,5 @@
 import numpy as np
-from binary_symmetric_channel import BinarySymmetricChannel
+from channels.binary_symmetric_channel import BinarySymmetricChannel
 
 
 def test_binary_symmetric_channel_0() -> None:
