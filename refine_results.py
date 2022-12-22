@@ -23,7 +23,6 @@ def build_sequence(burst_length: int) -> TransformerSequence:
         encoder=encoder,
         channel=channel,
         batch_shape=(64, 32, DATA_SYMBOL_COUNT + encoder.pad_count, SYMBOL_SIZE),
-        pad_count=encoder.pad_count,
     )
     return sequence
 

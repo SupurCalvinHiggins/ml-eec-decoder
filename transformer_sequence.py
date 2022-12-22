@@ -12,7 +12,7 @@ class TransformerSequence(tf.keras.utils.Sequence):
     ) -> None:
         """Constructs a Sequence dataset yielding batches of data in the shape of
         batch_shape. Uniform random labels are generated in the shape of
-        (symbol_count - pad_count,). These labels are transformed by the
+        (symbol_count - encoder.pad_count,). These labels are transformed by the
         transformer to produce the dataset features. The features
         should are produced by transforming the random labels with the encoder and then
         the channel.
@@ -29,8 +29,6 @@ class TransformerSequence(tf.keras.utils.Sequence):
                 of datum per batch, symbol_count is the number of symbols produced by
                 the transformer, and symbol_size is the size of each symbol produced
                 by the transformer.
-            pad_count:
-                The number of pad symbols appended to the labels by the transformer.
         """
         self._encoder = encoder
         self._channel = channel
@@ -40,7 +38,7 @@ class TransformerSequence(tf.keras.utils.Sequence):
             self._symbol_count,
             self._symbol_size,
         ) = batch_shape
-        self._pad_count = pad_count
+        self._pad_count = encoder.pad_count
         self._X = None
         self._y = None
         self.on_epoch_end()
