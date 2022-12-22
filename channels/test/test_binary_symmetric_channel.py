@@ -2,6 +2,14 @@ import numpy as np
 from channels import BinarySymmetricChannel
 
 
+def test_binary_symmetric_channel_return_type() -> None:
+    np.random.seed(0)
+    data = np.zeros(shape=10)
+    channel = BinarySymmetricChannel(crossover_probability=0.0)
+    transformed_data = channel.transform(data)
+    assert transformed_data.dtype == np.uint8
+
+
 def test_binary_symmetric_channel_0() -> None:
     np.random.seed(0)
     data = np.array([1, 0, 0, 1, 1])

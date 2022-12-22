@@ -30,7 +30,8 @@ class BinarySymmetricChannel:
         data = data.astype(np.uint8, copy=False)
 
         # Generate noise.
-        noise = np.random.choice((0, 1), size=data.size, p=self._distribution)
+        bits = np.array([0, 1], dtype=np.uint8)
+        noise = np.random.choice(bits, size=data.size, p=self._distribution)
 
         # Introduce noise into the data.
-        return np.logical_xor(data, noise, dtype=np.uint8)
+        return data ^ noise
