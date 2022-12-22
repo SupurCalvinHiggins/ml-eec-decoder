@@ -87,7 +87,7 @@ def train_models(output_directory: str) -> None:
         # Train the model.
         model.fit(
             sequence,
-            epochs=1,
+            epochs=1000,
             callbacks=[reduce_lr, early_stopping],
             verbose=1,
         )
